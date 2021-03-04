@@ -1,0 +1,17 @@
+
+<div class="container">
+    <div class="row splash-container">
+        <img class="splash" src="<%= @splash %>" alt="Anarcho-Bidenist"/>
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <div class="column">
+            <button style="width:100%">Log In</button>
+        </div>
+        <div class="column">
+            <button style="width:100%">Register</button>
+        </div>
+    </div>
+</div>
