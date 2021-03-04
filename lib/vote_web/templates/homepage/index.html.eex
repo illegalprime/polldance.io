@@ -6,12 +6,52 @@
 
     <br/>
 
-    <div class="row">
-        <div class="column">
-            <button style="width:100%">Log In</button>
+    <div class="row auth-forms">
+        <div class="column login">
+            <h1>Log In</h1>
+            <%= form_for @login_cs, @login, [as: :account], fn f -> %>
+                <%= label f, :email, "Email Address" %>
+                <%= email_input f, :email %>
+                <%= error_tag f, :email %>
+
+                <%= label f, :password, "Password" %>
+                <%= password_input f, :password %>
+                <%= error_tag f, :password %>
+
+                <%= submit "Log In via Email", class: "button button-primary" %>
+            <% end %>
+
+            <p>Or</p>
+
+            <%= link("Log In via Google",
+                to: Routes.auth_path(@conn, :request, "google"),
+                class: "button button-outline") %>
         </div>
         <div class="column">
-            <button style="width:100%">Register</button>
+            <h1>or Register</h1>
+            <%= form_for @register_cs, @register, [as: :account], fn f -> %>
+                <%= label f, :email, "Email Address" %>
+                <%= email_input f, :email %>
+                <%= error_tag f, :email %>
+
+                <%= label f, :password, "Password" %>
+                <%= password_input f, :password %>
+                <%= error_tag f, :password %>
+
+                <%= label f, :password_confirmation, "Password Confirmation" %>
+                <%= password_input f, :password_confirmation %>
+                <%= error_tag f, :password_confirmation %>
+
+                <%= submit "Register", class: "button button-primary" %>
+            <% end %>
         </div>
     </div>
+
+    <br/>
+    <div class="row" style="flex-direction:column;align-items:center">
+        <h2><i>
+            &ldquo;The <b>most</b> we can do is <b>vote</b> every four years.&rdquo;
+        </i></h2>
+    </div>
+    <br/>
 </div>

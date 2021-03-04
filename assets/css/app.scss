@@ -1,6 +1,12 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Oxygen', sans-serif !important;
+}
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
@@ -95,8 +101,12 @@ body {
 }
 
 header {
-    h1 {
-        margin: 2rem 0rem 2rem 0rem;
+    .logo-container {
+        h1 {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+        }
+        margin: 2rem 0rem 1rem 0rem;
     }
 }
 
@@ -105,5 +115,16 @@ header {
     align-items: center;
     img.splash {
         max-height: 50vh;
+    }
+}
+
+.auth-forms {
+    .login {
+        form {
+            margin-bottom: 0;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
     }
 }
