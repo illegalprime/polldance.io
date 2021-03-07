@@ -1,0 +1,81 @@
+<div class="container mixed-form">
+    <%= form_for @cs, "/TODO", [
+        class: "mixed-form",
+        phx_change: :validate,
+    ], fn f -> %>
+        <h1>
+            <%= if @cs.changes[:title] do %>
+                <%= @cs.changes.title %>
+            <% else %>
+                Ballot Title
+            <% end %>
+        </h1>
+        <%= label f, :title, "Title" %>
+        <%= text_input f, :title, placeholder: "Ballot Title" %>
+        <%= error_tag f, :title %>
+
+        <%= label f, :desc, "Description" %>
+        <%= textarea f, :desc, placeholder: "Ballot Summary Here" %>
+        <%= error_tag f, :desc %>
+        <blockquote>
+            <%= if @cs.changes[:desc] do %>
+                <%= raw(render_markdown(@cs.changes.desc)) %>
+            <% else %>
+                Ballot Summary Here
+            <% end %>
+        </blockquote>
+
+        <%= inputs_for f, :ballot_items, fn p -> %>
+            <hr/>
+            <% ballot_item = @cs.changes.ballot_items |> Enum.at(p.index) %>
+            <h2>
+                <%= p.index + 1 %>.
+                <%= if ballot_item.changes[:title] do %>
+                    <%= ballot_item.changes[:title] %>
+                <% else %>
+                    Ballot Item Title
+                <% end %>
+
+                <a href="#"
+                   phx-click="delete_ballot_item"
+                   phx-value-idx="<%= p.index %>"
+                   class="btn-delete"
+                >&times; Delete</a>
+            </h2>
+            <%= label p, :title, "Item Title" %>
+            <%= text_input p, :title, placeholder: "Ballot Item Title" %>
+            <%= error_tag p, :title %>
+
+            <%= label p, :desc, "Description" %>
+            <%= textarea p, :desc, placeholder: "Ballot Item Summary Here" %>
+            <%= error_tag p, :desc %>
+            <blockquote>
+                <%= if ballot_item.changes[:desc] do %>
+                    <%= raw(render_markdown(ballot_item.changes.desc)) %>
+                <% else %>
+                    Ballot Item Summary Here
+                <% end %>
+            </blockquote>
+
+            <%= label p, :options %>
+            <%= array_input p, :options, [
+                placeholder: "Enter an item to vote on"
+            ], [
+                title: "Remove",
+                class: "button button-outline",
+                phx_click: "delete_option",
+                phx_value_item: p.index,
+            ] %>
+            <a
+                phx-click="push_option"
+                phx-value-idx="<%= p.index %>"
+                class="button button-outline"
+            >add option</a>
+        <% end %>
+
+        <hr/>
+
+        <a phx-click="push_ballot_item" class="button button-outline">Add Ballot Item</a>
+        <%= submit "Publish Ballot" %>
+    <% end %>
+</div>

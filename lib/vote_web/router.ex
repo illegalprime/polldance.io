@@ -44,6 +44,7 @@ defmodule VoteWeb.Router do
     pipe_through [:browser, :guardian, :browser_auth]
 
     live "/app", PageLive, :index
+    live "/new", NewPollLive, :index
   end
 
   # Other scopes may use custom stacks.

@@ -54,6 +54,8 @@ defmodule Vote.MixProject do
       {:argon2_elixir, "~> 2.3"},
       {:guardian, "~> 2.1"},
       {:bamboo, "~> 1.7"},
+      {:earmark, "~> 1.4"},
+      {:phoenix_html_sanitizer, "~> 1.1"},
     ]
   end
 

@@ -128,3 +128,40 @@ header {
         }
     }
 }
+
+input[type="checkbox"]
+{
+    vertical-align: baseline;
+    margin-top: 5px;
+}
+
+form.mixed-form {
+    blockquote {
+        margin-top: 0;
+    }
+
+    .settings-start {
+        margin-top: 1.5rem;
+    }
+}
+
+a.btn-delete {
+    font-size: 1.7rem;
+    margin-left: 2rem;
+}
+
+ol.input_container {
+    list-style: decimal outside;
+    li {
+        display: flex;
+        flex-direction: row;
+        input {
+            margin: 0;
+        }
+        a {
+            margin-left: 1rem;
+            margin-bottom: 0;
+        }
+    }
+    margin-bottom: 1rem;
+}

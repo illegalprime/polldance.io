@@ -11,6 +11,7 @@ defmodule Vote.Accounts.Account do
     field :encrypted_password, :string
     field :provider, :string
     field :verified, :boolean, default: false
+    many_to_many :ballots, Vote.Ballots.Ballot, join_through: "ballots_accounts"
 
     timestamps()
   end
