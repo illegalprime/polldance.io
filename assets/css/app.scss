@@ -151,7 +151,6 @@ a.btn-delete {
 }
 
 ol.input_container {
-    list-style: decimal outside;
     li {
         display: flex;
         flex-direction: row;
@@ -164,6 +163,12 @@ ol.input_container {
         }
     }
     margin-bottom: 2rem;
+}
+
+.container {
+    ol {
+        list-style: decimal outside;
+    }
 }
 
 .new-ballot {

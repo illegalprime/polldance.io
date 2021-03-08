@@ -3,6 +3,15 @@ defmodule Vote.Ballots do
   alias Vote.Repo
   alias __MODULE__.{Ballot, BallotItem}
 
+  def authored_by_user(user) do
+    Repo.preload(user, [:authored_ballots])
+  end
+
+  def by_id(id) do
+    Repo.get(Ballot, id)
+    |> Repo.preload([:ballot_items])
+  end
+
   def save(params, user) do
     build_ballot(params)
     |> put_assoc(:account, user)

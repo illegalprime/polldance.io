@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <h1><%= @ballot.title %></h1>
+    </div>
+    <%= if @ballot.desc do %>
+        <div class="row">
+            <%= render_markdown(@ballot.desc) %>
+        </div>
+    <% end %>
+
+    <%= for item <- @ballot.ballot_items do %>
+        <div class="row">
+            <h2><%= item.title %></h2>
+        </div>
+        <%= if item.desc do %>
+            <div class="row">
+                <%= render_markdown(item.desc) %>
+            </div>
+        <% end %>
+        <div class="row">
+            <h4><b>Options</b></h4>
+        </div>
+        <div class="row">
+            <ol>
+                <%= for option <- item.options do %>
+                    <li><%= option %></li>
+                <% end %>
+            </ol>
+        </div>
+    <% end %>
+</div>

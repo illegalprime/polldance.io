@@ -1,10 +1,28 @@
 <div class="container">
     <div class="row">
-        <div class="column">
-            <section class="phx-hero">
-                <h1>Vote on Stuff</h1>
-                <p>There's always stuff to vote on.</p>
-            </section>
-        </div>
+        <h1>Published Ballots</h1>
+    </div>
+
+    <div class="row">
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Created</th>
+                <th>View</th>
+            </tr>
+            <%= for ballot <- @my_ballots do %>
+                <tr>
+                    <td><%= ballot.title %></td>
+                    <td><%= ballot.inserted_at %></td>
+                    <td><a href="<%= ballot_link(@socket, ballot) %>">Open Ballot</a></td>
+                </tr>
+            <% end %>
+        </table>
+    </div>
+
+    <div class="row">
+        <a href="<%= Routes.new_poll_path(@socket, :index) %>" class="button">
+            new ballot
+        </a>
     </div>
 </div>

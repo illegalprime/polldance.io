@@ -64,6 +64,4 @@ defmodule VoteWeb.NewPollLive do
     |> assign(cs: Ballots.delete_option(socket.assigns.cs, item, idx))
     |> noreply()
   end
-
-  def render_markdown(md), do: Vote.Markdown.render_markdown(md)
 end
