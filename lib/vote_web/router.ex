@@ -26,7 +26,7 @@ defmodule VoteWeb.Router do
     pipe_through [:browser, :guardian]
 
     get "/", HomepageController, :index
-    get "/ballot/:ballot", BallotController, :show
+    live "/ballot/:ballot", BallotLive, :index
 
     post   "/login",           AuthController, :login
     post   "/register",        AuthController, :register

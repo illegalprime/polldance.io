@@ -14,12 +14,14 @@ defmodule VoteWeb.PageLive do
 
     socket
     |> assign(account: user)
+    |> assign(page_title: "Home")
     |> assign(my_ballots: ballots.authored_ballots)
     |> ok()
   end
 
+  # TODO: don't generate new tokens on every page load?
   def ballot_link(socket, ballot) do
     token = Token.gen_ballot_token(ballot)
-    Routes.ballot_url(socket, :show, token)
+    Routes.ballot_url(socket, :index, token)
   end
 end

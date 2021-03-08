@@ -10,6 +10,7 @@ defmodule VoteWeb.NewPollLive do
     {:ok, user} = VoteWeb.Authentication.load_user(session)
     socket
     |> assign(cs: Ballots.new())
+    |> assign(page_title: "New Ballot")
     |> assign(account: user)
     |> ok()
   end
