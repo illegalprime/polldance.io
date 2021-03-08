@@ -7,6 +7,13 @@ defmodule VoteWeb.Views.InputHelpers do
     values = Form.input_value(form, field) || []
     id = Form.input_id(form, field)
 
+    # always add one extra element
+    values =
+      case List.last(values) do
+        "" -> values
+        _l -> values ++ [""]
+      end
+
     content_tag(
       :ol,
       id: "#{id}_container",
@@ -30,10 +37,16 @@ defmodule VoteWeb.Views.InputHelpers do
       id: "#{id}_#{index}",
     ] ++ input_opts
 
+    rm_opts = [
+      to: "#",
+      phx_value_idx: index,
+      tabindex: -1,
+    ] ++ rm_opts
+
     content_tag :li do
       [
         apply(Form, type, [form, field, input_opts]),
-        link("Remove", [to: "#", phx_value_idx: index] ++ rm_opts),
+        link("Remove", rm_opts),
       ]
     end
   end
