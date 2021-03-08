@@ -1,7 +1,6 @@
 defmodule VoteWeb.HomepageController do
   alias Vote.Accounts.Account
   use VoteWeb, :controller
-  alias VoteWeb.Authentication
 
   @memes [
     "/images/bidenist.png",

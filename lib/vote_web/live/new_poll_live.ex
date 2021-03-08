@@ -1,25 +1,40 @@
 defmodule VoteWeb.NewPollLive do
   use VoteWeb, :live_view
-  import Ecto.Changeset
-  import Logger
   alias Vote.Ballots
 
   def ok(socket), do: {:ok, socket}
   def noreply(socket), do: {:noreply, socket}
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    {:ok, user} = VoteWeb.Authentication.load_user(session)
     socket
     |> assign(cs: Ballots.new())
+    |> assign(account: user)
     |> ok()
   end
 
   @impl true
   def handle_event("validate", %{"ballot" => ballot}, socket) do
-    Logger.warn(inspect(ballot))
     socket
     |> assign(cs: Ballots.new(ballot))
     |> noreply()
+  end
+
+  @impl true
+  def handle_event("save", %{"ballot" => ballot}, socket) do
+    case Ballots.save(ballot, socket.assigns.account) do
+      {:error, %Ecto.Changeset{} = cs} ->
+        socket
+        |> assign(cs: cs)
+        |> noreply()
+
+      {:ok, _} ->
+        socket
+        |> put_flash(:info, "Published successfully!")
+        |> push_redirect(to: Routes.page_path(socket, :index))
+        |> noreply()
+    end
   end
 
   @impl true

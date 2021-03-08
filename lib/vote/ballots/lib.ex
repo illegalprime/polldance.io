@@ -3,14 +3,26 @@ defmodule Vote.Ballots do
   alias Vote.Repo
   alias __MODULE__.{Ballot, BallotItem}
 
-  def new(params) do
-    %Ballot{}
-    |> Repo.preload([:ballot_items, :participants])
-    |> Ballot.changeset(params)
+  def save(params, user) do
+    build_ballot(params)
+    |> put_assoc(:account, user)
+    |> Repo.insert()
   end
 
-  def new() do
-    new(%{}) |> push_item()
+  def new(parms \\ %{})
+
+  def new(%{"ballot_items" => _} = params) do
+    build_ballot(params) |> Map.put(:action, :insert)
+  end
+
+  def new(params) do
+    build_ballot(params) |> push_item() |> Map.put(:action, :insert)
+  end
+
+  def build_ballot(params \\ %{}) do
+    %Ballot{}
+    |> Repo.preload([:ballot_items])
+    |> Ballot.changeset(params)
   end
 
   def new_item(params \\ %{})

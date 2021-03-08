@@ -1,6 +1,7 @@
-<div class="container mixed-form">
-    <%= form_for @cs, "/TODO", [
+<div class="container new-ballot mixed-form">
+    <%= form_for @cs, "#", [
         class: "mixed-form",
+        phx_submit: :save,
         phx_change: :validate,
     ], fn f -> %>
         <h1>
@@ -27,6 +28,7 @@
 
         <%= inputs_for f, :ballot_items, fn p -> %>
             <hr/>
+            <div class="ballot-item-container">
             <% ballot_item = @cs.changes.ballot_items |> Enum.at(p.index) %>
             <h2>
                 <%= p.index + 1 %>.
@@ -57,6 +59,15 @@
                 <% end %>
             </blockquote>
 
+            <div class="ballot-item-settings">
+                <%= label p, :voting_method, "Voting method: " %>
+                <%= select p, :voting_method, ["Rank Choice": :rank_choice] %>
+            </div>
+            <div class="ballot-item-settings">
+                <%= label p, :appendable, "Allow others to add options:" %>
+                <%= select p, :appendable, ["Yes": true, "No": false] %>
+            </div>
+
             <%= label p, :options %>
             <%= array_input p, :options, [
                 placeholder: "Enter an item to vote on"
@@ -65,12 +76,15 @@
                 class: "button button-outline",
                 phx_click: "delete_option",
                 phx_value_item: p.index,
+            ], [
+                title: "Add Item",
+                class: "button button-outline",
+                phx_click: "push_option",
+                phx_value_idx: p.index,
             ] %>
-            <a
-                phx-click="push_option"
-                phx-value-idx="<%= p.index %>"
-                class="button button-outline"
-            >add option</a>
+            <%= error_tag p, :options %>
+
+            </div>
         <% end %>
 
         <hr/>

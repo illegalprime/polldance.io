@@ -3,7 +3,7 @@ defmodule VoteWeb.Views.InputHelpers do
   require Logger
   alias Phoenix.HTML.Form
 
-  def array_input(form, field, input_opts, rm_opts) do
+  def array_input(form, field, input_opts, rm_opts, _add_opts) do
     values = Form.input_value(form, field) || []
     id = Form.input_id(form, field)
 
@@ -14,16 +14,21 @@ defmodule VoteWeb.Views.InputHelpers do
         _l -> values ++ [""]
       end
 
-    content_tag(
-      :ol,
-      id: "#{id}_container",
-      class: "input_container",
-    ) do
-      values
-      |> Enum.with_index()
-      |> Enum.map(fn {v, i} ->
-        form_elements(form, field, v, i, input_opts, rm_opts)
-      end)
+    list_items = values
+    |> Enum.with_index()
+    |> Enum.map(fn {v, i} ->
+      form_elements(form, field, v, i, input_opts, rm_opts)
+    end)
+
+    array = content_tag(:ol, id: "#{id}_container", class: "input_container") do
+      list_items
+    end
+
+    content_tag(:div) do
+      [
+        array,
+        # link(add_opts[:title], [to: "#"] ++ add_opts)
+      ]
     end
   end
 
@@ -46,7 +51,7 @@ defmodule VoteWeb.Views.InputHelpers do
     content_tag :li do
       [
         apply(Form, type, [form, field, input_opts]),
-        link("Remove", rm_opts),
+        link(rm_opts[:title], rm_opts),
       ]
     end
   end

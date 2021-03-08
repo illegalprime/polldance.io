@@ -2,6 +2,9 @@ defmodule VoteWeb.Authentication do
   use Guardian, otp_app: :vote
   alias Vote.{Accounts, Accounts.Account}
 
+  @claims %{"typ" => "access"}
+  @token_key "guardian_default_token"
+
   def subject_for_token(resource, _claims) do
     {:ok, to_string(resource.id)}
   end
@@ -19,6 +22,13 @@ defmodule VoteWeb.Authentication do
 
   def get_current_account(conn) do
     __MODULE__.Plug.current_resource(conn)
+  end
+
+  def load_user(%{@token_key => token}) do
+    case Guardian.decode_and_verify(__MODULE__, token, @claims) do
+      {:ok, claims} -> resource_from_claims(claims)
+      _ -> {:error, :not_authorized}
+    end
   end
 
   def authenticate(%Account{verified: false}, _) do

@@ -3,12 +3,11 @@ defmodule Vote.Ballots.Ballot do
   import Ecto.Changeset
 
   schema "ballots" do
-    field :close_date, :date
-    field :close_time, :time
-    field :desc, :string
     field :title, :string
-    many_to_many :participants, Vote.Accounts.Account, join_through: "ballots_accounts"
+    field :desc, :string
+    field :public, :boolean, default: true
     has_many :ballot_items, Vote.Ballots.BallotItem
+    belongs_to :account, Vote.Accounts.Account
 
     timestamps()
   end
@@ -16,9 +15,9 @@ defmodule Vote.Ballots.Ballot do
   @doc false
   def changeset(ballot, attrs) do
     ballot
-    |> cast(attrs, [:title, :desc, :close_time, :close_date])
+    |> cast(attrs, [:title, :desc, :public])
     |> cast_assoc(:ballot_items, required: true)
-    |> validate_required([:title, :desc, :close_time, :close_date])
+    |> validate_required([:title])
     |> unique_constraint(:title)
   end
 end
