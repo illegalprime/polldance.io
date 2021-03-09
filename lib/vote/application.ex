@@ -14,9 +14,11 @@ defmodule Vote.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Vote.PubSub},
       # Start the Endpoint (http/https)
-      VoteWeb.Endpoint
+      VoteWeb.Endpoint,
       # Start a worker by calling: Vote.Worker.start_link(arg)
       # {Vote.Worker, arg}
+      {Vote.Ballots.LiveState, :ok},
+      {DynamicSupervisor, name: Vote.Ballots.Supervisor, strategy: :one_for_one},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

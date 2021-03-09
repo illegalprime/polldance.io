@@ -22,6 +22,27 @@ defmodule Vote.Ballots.BallotItem do
     |> unique_constraint(:title)
   end
 
+  def push_option_cs(ballot_item, option) do
+    valid? = option_valid(ballot_item.options, option)
+    append? = ballot_item.appendable
+
+    ballot_item
+    |> change()
+    |> put_change(:options, ballot_item.options ++ [option])
+    |> do_if(!valid? or !append?, &(add_error(&1, :options, "bad new option")))
+  end
+
+  def option_valid(options, option) do
+    option = option |> String.downcase() |> String.trim()
+    size? = String.length(option) > 0
+    dup? = options
+    |> Enum.map(&String.downcase/1)
+    |> Enum.map(&String.trim/1)
+    |> Enum.any?(fn o -> o == option end)
+
+    size? && !dup?
+  end
+
   defp put_options(cs, options) do
     # remove any leading empty options (based on array_input implementation)
     options = options

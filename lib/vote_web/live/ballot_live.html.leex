@@ -8,7 +8,7 @@
         </div>
     <% end %>
 
-    <%= for item <- @ballot.ballot_items do %>
+    <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
         <div class="row">
             <h2><%= item.title %></h2>
         </div>
@@ -21,11 +21,28 @@
             <h4><b>Options</b></h4>
         </div>
         <div class="row">
-            <ol>
+            <ol class="<%= if item.appendable do "mb0" else "" end %>">
                 <%= for option <- item.options do %>
                     <li><%= option %></li>
                 <% end %>
             </ol>
         </div>
+        <%= if item.appendable do %>
+            <% disabled = if @options_valid[idx] do [] else [disabled: ""] end %>
+            <%= form_for :add_option, "#", [
+                phx_submit: :add_option,
+                phx_change: :add_option_validate,
+            ], fn f -> %>
+                <div class="row">
+                    <%= text_input f, :option, [
+                        autofocus: true,
+                        class: "mr1",
+                        placeholder: "Add your own options to vote on",
+                    ] %>
+                    <%= hidden_input f, :idx, value: idx %>
+                    <%= submit "add", disabled %>
+                </div>
+            <% end %>
+        <% end %>
     <% end %>
 </div>
