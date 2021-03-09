@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" phx-hook="FormReset" id="ballot_view">
     <div class="row">
         <h1><%= @ballot.title %></h1>
     </div>
@@ -29,18 +29,20 @@
         </div>
         <%= if item.appendable do %>
             <% disabled = if @options_valid[idx] do [] else [disabled: ""] end %>
+            <% id = "option_append_#{idx}" %>
             <%= form_for :add_option, "#", [
                 phx_submit: :add_option,
                 phx_change: :add_option_validate,
+                id: id,
             ], fn f -> %>
                 <div class="row">
-                    <!-- TODO: clear input after submit -->
                     <%= text_input f, :option, [
                         autofocus: true,
                         class: "mr1",
                         placeholder: "Add your own options to vote on",
                     ] %>
                     <%= hidden_input f, :idx, value: idx %>
+                    <%= hidden_input f, :form, value: id %>
                     <%= submit "add", disabled %>
                 </div>
             <% end %>

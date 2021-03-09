@@ -38,9 +38,12 @@ defmodule VoteWeb.BallotLive do
     idx = String.to_integer(info["idx"])
     item_id = Enum.at(socket.assigns.ballot.ballot_items, idx).id
     option = String.trim(info["option"])
+    options_valid = Map.delete(socket.assigns.options_valid, idx)
 
     socket
+    |> assign(options_valid: options_valid)
     |> broadcast_listener({:add_option, item_id, option})
+    |> push_event("clear_add_option", %{form: info["form"]})
     |> noreply()
   end
 

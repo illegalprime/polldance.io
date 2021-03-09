@@ -35,7 +35,7 @@ defmodule Vote.Ballots.BallotListener do
     valid? = BallotItem.option_valid(item.options, option)
 
     if valid? and item.appendable do
-      BallotItem.push_option_cs(item, option) |> Repo.update!()
+      BallotItem.push_option_cs(item, option) |> Repo.update()
       update(id)
     end
 
