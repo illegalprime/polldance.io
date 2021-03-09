@@ -34,6 +34,7 @@
                 phx_change: :add_option_validate,
             ], fn f -> %>
                 <div class="row">
+                    <!-- TODO: clear input after submit -->
                     <%= text_input f, :option, [
                         autofocus: true,
                         class: "mr1",

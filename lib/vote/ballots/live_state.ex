@@ -13,6 +13,10 @@ defmodule Vote.Ballots.LiveState do
     GenServer.call(__MODULE__, {:register, ballot_id})
   end
 
+  def ps() do
+    GenServer.call(__MODULE__, :ps)
+  end
+
   #
   # Server
   #
@@ -41,6 +45,11 @@ defmodule Vote.Ballots.LiveState do
   end
 
   @impl true
+  def handle_call(:ps, _from, {registry, refs}) do
+    {:reply, {registry, refs}, {registry, refs}}
+  end
+
+  @impl true
   def handle_info({:DOWN, ref, :process, _pid, _reason}, {registry, refs}) do
     {id, refs} = Map.pop(refs, ref)
     {references, pid} = Map.get(registry, id)
@@ -59,10 +68,8 @@ defmodule Vote.Ballots.LiveState do
   end
 
   def start_child(id) do
-    case DynamicSupervisor.start_child(Supervisor, {BallotListener, id}) do
-      {:ok, pid} -> pid
-      {:error, {:already_started, pid}} -> pid
-    end
+    {:ok, pid} = DynamicSupervisor.start_child(Supervisor, {BallotListener, id})
+    pid
   end
 
   def terminate_child(pid) do
