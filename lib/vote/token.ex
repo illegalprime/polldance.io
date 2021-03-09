@@ -19,11 +19,10 @@ defmodule Vote.Token do
   end
 
   def gen_ballot_token(%Ballot{id: id}) do
-    Phoenix.Token.sign(Endpoint, @ballot_salt, id)
+    Phoenix.Token.sign(Endpoint, @ballot_salt, id, signed_at: 0)
   end
 
   def verify_ballot_token(token) do
-    max_age = 86_400_00 # 100 days
-    Phoenix.Token.verify(Endpoint, @ballot_salt, token, max_age: max_age)
+    Phoenix.Token.verify(Endpoint, @ballot_salt, token, max_age: :infinity)
   end
 end
