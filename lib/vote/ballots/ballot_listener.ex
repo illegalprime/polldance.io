@@ -36,13 +36,13 @@ defmodule Vote.Ballots.BallotListener do
 
     if valid? and item.appendable do
       BallotItem.push_option_cs(item, option) |> Repo.update()
-      update(id)
+      update(id, item_id)
     end
 
     {:noreply, id}
   end
 
-  def update(id) do
-    PubSub.broadcast(Vote.PubSub, "ballot/#{id}/update", :update)
+  def update(id, item_id) do
+    PubSub.broadcast(Vote.PubSub, "ballot/#{id}/update", {:update_item, item_id})
   end
 end

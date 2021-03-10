@@ -184,6 +184,19 @@ ol.input_container {
     }
 }
 
+table.drag-table {
+    margin-bottom: 1rem;
+    border-bottom: 0.1rem solid #e1e1e1;
+    .drag-handle {
+    }
+    td {
+        border-top: 0.1rem solid #e1e1e1;
+        background-color: white;
+    }
+    tr.sortable_clone {
+    }
+}
+
 .ml1 {
     margin-left: 1rem;
 }
@@ -198,4 +211,12 @@ ol.input_container {
 
 .mb0 {
     margin-bottom: 0rem;
+}
+
+.ta-center {
+    text-align: center;
+}
+
+.ta-right {
+    text-align: right;
 }

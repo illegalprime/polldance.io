@@ -18,14 +18,22 @@
             </div>
         <% end %>
         <div class="row">
-            <h4><b>Options</b></h4>
-        </div>
-        <div class="row">
-            <ol class="<%= if item.appendable do "mb0" else "" end %>">
-                <%= for option <- item.options do %>
-                    <li><%= option %></li>
-                <% end %>
-            </ol>
+            <table
+                phx-update="ignore"
+                id="table_options_<%= idx %>"
+                phx-hook="DragTable"
+                class="drag-table"
+                data-idx="<%= idx %>"
+            >
+                <thead>
+                    <tr>
+                        <th class="ta-center">Rank</th>
+                        <th>Option</th>
+                        <th class="ta-center">⌃/⌄</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
         <%= if item.appendable do %>
             <% disabled = if @options_valid[idx] do [] else [disabled: ""] end %>

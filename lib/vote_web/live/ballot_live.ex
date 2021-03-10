@@ -24,6 +24,8 @@ defmodule VoteWeb.BallotLive do
       |> assign(ballot: ballot)
       |> assign(page_title: ballot.title)
       |> assign(options_valid: %{})
+      |> assign(options_selection: %{})
+      |> all_options_events(ballot)
       |> ok()
     else
       _ -> socket
@@ -60,10 +62,55 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def handle_info(:update, socket) do
+  def handle_event(
+    "update_selection", %{"idx" => idx, "options" => opts}, socket
+  ) do
+    idx = String.to_integer(idx)
+    selected = socket.assigns.options_selection
+    item_id = Enum.at(socket.assigns.ballot.ballot_items, idx).id
+
     socket
-    |> assign(ballot: Ballots.by_id(socket.assigns.ballot.id))
+    |> options_update_event(opts, idx)
+    |> assign(options_selection: Map.put(selected, item_id, opts))
     |> noreply()
+  end
+
+  @impl true
+  def handle_info({:update_item, item_id}, socket) do
+    new_ballot = Ballots.by_id(socket.assigns.ballot.id)
+    {item, idx} = new_ballot.ballot_items
+    |> Enum.with_index()
+    |> Enum.find(fn {item, _idx} -> item.id == item_id end)
+
+    # get the source of truth of available options
+    latest_set = MapSet.new(item.options)
+    # get the order that the user ranked them last
+    all_selections = socket.assigns.options_selection
+    selected = Map.get(all_selections, item_id, [])
+    # remove any that aren't in the new set of possible options
+    |> Enum.filter(fn o -> MapSet.member?(latest_set, o) end)
+    # get any new options that were added by users
+    new = MapSet.difference(latest_set, MapSet.new(selected)) |> MapSet.to_list()
+    # append new options last so they don't interfere with current selection
+    new_selection = selected ++ new
+
+    socket
+    |> assign(ballot: new_ballot)
+    |> options_update_event(new_selection, idx)
+    |> assign(options_selection: Map.put(all_selections, item_id, new_selection))
+    |> noreply()
+  end
+
+  def all_options_events(socket, ballot) do
+    ballot.ballot_items
+    |> Enum.with_index()
+    |> Enum.reduce(socket, fn {item, idx}, socket ->
+      options_update_event(socket, item.options, idx)
+    end)
+  end
+
+  def options_update_event(socket, options, idx) do
+    push_event(socket, "options/#{idx}/update", %{options: options})
   end
 
   def broadcast_listener(socket, data) do
