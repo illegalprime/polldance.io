@@ -193,7 +193,18 @@ table.drag-table {
         border-top: 0.1rem solid #e1e1e1;
         background-color: white;
     }
+    td.opt-name {
+        width: 100%;
+    }
     tr.sortable_clone {
+    }
+}
+
+.ballot-view {
+    .ballot-desc :last-child {
+        margin-bottom: 0rem;
+    }
+    .ballot-item-desc {
     }
 }
 
@@ -219,4 +230,8 @@ table.drag-table {
 
 .ta-right {
     text-align: right;
+}
+
+.fl-baseline {
+    align-items: baseline;
 }

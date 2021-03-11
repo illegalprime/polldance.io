@@ -1,20 +1,25 @@
-<div class="container" phx-hook="FormReset" id="ballot_view">
+<div class="container ballot-view" phx-hook="FormReset" id="ballot_view">
     <div class="row">
         <h1><%= @ballot.title %></h1>
     </div>
     <%= if @ballot.desc do %>
         <div class="row">
-            <%= render_markdown(@ballot.desc) %>
+            <div class="column ballot-desc">
+                <%= render_markdown(@ballot.desc) %>
+            </div>
         </div>
     <% end %>
 
-    <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
+    <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) |> Enum.reverse() do %>
+        <hr/>
         <div class="row">
             <h2><%= item.title %></h2>
         </div>
         <%= if item.desc do %>
             <div class="row">
-                <%= render_markdown(item.desc) %>
+                <div class="column ballot-item-desc">
+                    <%= render_markdown(item.desc) %>
+                </div>
             </div>
         <% end %>
         <div class="row">
@@ -42,11 +47,11 @@
                 phx_submit: :add_option,
                 phx_change: :add_option_validate,
                 id: id,
+                class: "mb0",
             ], fn f -> %>
-                <div class="row">
+                <div class="row mb0">
                     <%= text_input f, :option, [
-                        autofocus: true,
-                        class: "mr1",
+                        class: "mr1 mb1",
                         placeholder: "Add your own options to vote on",
                     ] %>
                     <%= hidden_input f, :idx, value: idx %>
@@ -56,4 +61,11 @@
             <% end %>
         <% end %>
     <% end %>
+
+    <hr/>
+    <div class="row fl-baseline">
+        <button phx-click="submit-vote" class="button mr1">Submit Vote!</button>
+        <p><i>you can change your vote later by coming back to this page</i></p>
+    </div>
+    <br/><br/><br/><br/><br/><br/><br/>
 </div>
