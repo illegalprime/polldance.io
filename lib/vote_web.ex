@@ -89,7 +89,11 @@ defmodule VoteWeb do
 
       import VoteWeb.ErrorHelpers
       import VoteWeb.Gettext
-      import VoteWeb.Views.InputHelpers
+      import VoteWeb.Views.InputHelpers.ArrayInput
+      import VoteWeb.Views.InputHelpers.RankingInput
+      import VoteWeb.Views.InputHelpers.RatingInput
+      import VoteWeb.Views.InputHelpers.ApprovalInput
+      import VoteWeb.Views.InputHelpers.SelectOneInput
       import Vote.Markdown
       alias VoteWeb.Router.Helpers, as: Routes
     end

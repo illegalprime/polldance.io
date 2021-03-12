@@ -193,10 +193,18 @@ table.drag-table {
         border-top: 0.1rem solid #e1e1e1;
         background-color: white;
     }
-    td.opt-name {
+    td.opt-name, th.opt-name-header {
         width: 100%;
     }
     tr.sortable_clone {
+    }
+    th.drag-header {
+        padding-right: 1.5rem;
+    }
+    tr.rank-divider td {
+        opacity: 0.7;
+        background-color: #e1e1e1;
+        padding: 0.2rem 0;
     }
 }
 
@@ -205,6 +213,82 @@ table.drag-table {
         margin-bottom: 0rem;
     }
     .ballot-item-desc {
+    }
+}
+
+table.rank-table {
+    td:first-child, th:first-child, td:last-child, th:last-child {
+        padding: 1rem 1.5rem;
+    }
+    .opt-name, .opt-name-header {
+        width: 100%;
+    }
+    .opt-rating {
+        .stars-container {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            input {
+                display: none;
+            }
+
+            label {
+                padding: 0 0.3rem;
+                margin: 0;
+                margin-top: -2px;
+            }
+            label:before {
+                content: "⭐";
+                opacity: 0.4;
+                filter: grayscale(100%);
+            }
+            label:hover:before,
+            label:hover ~ label:before,
+            input:checked ~ label:before,
+            input:checked ~ label:before {
+                opacity: 1;
+                filter: none;
+            }
+        }
+    }
+    tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+table.approval-table {
+    td:first-child, th:first-child, td:last-child, th:last-child {
+        padding: 1rem 1.5rem;
+    }
+    .opt-name, .opt-name-header {
+        width: 100%;
+    }
+    tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    input {
+        margin: 0.5rem;
+    }
+    td.opt-approval-header, td.opt-approval {
+        text-align: center;
+    }
+}
+
+table.select-one-table {
+    td:first-child, th:first-child, td:last-child, th:last-child {
+        padding: 1rem 1.5rem;
+    }
+    .opt-name, .opt-name-header {
+        width: 100%;
+    }
+    tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    input {
+        margin: 0.5rem;
+    }
+    td.opt-select-one-header, td.opt-select-one {
+        text-align: center;
     }
 }
 

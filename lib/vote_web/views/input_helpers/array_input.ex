@@ -1,4 +1,4 @@
-defmodule VoteWeb.Views.InputHelpers do
+defmodule VoteWeb.Views.InputHelpers.ArrayInput do
   use Phoenix.HTML
   require Logger
   alias Phoenix.HTML.Form

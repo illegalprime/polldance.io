@@ -1,71 +1,59 @@
-<div class="container ballot-view" phx-hook="FormReset" id="ballot_view">
-    <div class="row">
-        <h1><%= @ballot.title %></h1>
-    </div>
-    <%= if @ballot.desc do %>
+<div class="container ballot-view">
+    <%= form_for @cs, "#", [
+        phx_submit: :vote_submit,
+        phx_change: :vote_change,
+    ], fn f -> %>
         <div class="row">
-            <div class="column ballot-desc">
-                <%= render_markdown(@ballot.desc) %>
-            </div>
+            <h1><%= @cs.data.ballot.title %></h1>
         </div>
-    <% end %>
-
-    <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) |> Enum.reverse() do %>
-        <hr/>
-        <div class="row">
-            <h2><%= item.title %></h2>
-        </div>
-        <%= if item.desc do %>
+        <%= if @cs.data.ballot.desc do %>
             <div class="row">
-                <div class="column ballot-item-desc">
-                    <%= render_markdown(item.desc) %>
+                <div class="ballot-desc">
+                    <%= render_markdown(@cs.data.ballot.desc) %>
                 </div>
             </div>
         <% end %>
-        <div class="row">
-            <table
-                phx-update="ignore"
-                id="table_options_<%= idx %>"
-                phx-hook="DragTable"
-                class="drag-table"
-                data-idx="<%= idx %>"
-            >
-                <thead>
-                    <tr>
-                        <th class="ta-center">Rank</th>
-                        <th>Option</th>
-                        <th class="ta-center">⌃/⌄</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <%= if item.appendable do %>
-            <% disabled = if @options_valid[idx] do [] else [disabled: ""] end %>
-            <% id = "option_append_#{idx}" %>
-            <%= form_for :add_option, "#", [
-                phx_submit: :add_option,
-                phx_change: :add_option_validate,
-                id: id,
-                class: "mb0",
-            ], fn f -> %>
-                <div class="row mb0">
-                    <%= text_input f, :option, [
-                        class: "mr1 mb1",
+
+        <%= inputs_for f, :responses, fn p -> %>
+            <% idx = p.index %>
+            <% response = Enum.at(@cs.changes.responses, idx) %>
+            <% item = response.changes.ballot_item.data %>
+            <hr/>
+            <div class="row">
+                <h2><%= item.title %></h2>
+            </div>
+            <%= if item.desc do %>
+                <div class="row">
+                    <div class="ballot-item-desc">
+                        <%= render_markdown(item.desc) %>
+                    </div>
+                </div>
+            <% end %>
+            <div class="row">
+                <%#= ranking_input p, :response, item.options, item_idx: idx %>
+                <%#= rating_input p, :response, item.options, n: 5 %>
+                <%#= approval_input p, :response, item.options %>
+                <%= select_one_input p, :response, item.options %>
+            </div>
+            <%= if item.appendable do %>
+                <div class="row mb0"
+                     id="add_option_<%= idx %>"
+                     phx-hook="AppendToItem"
+                >
+                    <%= text_input p, :append, [
+                        class: "add_option mr1 mb1",
                         placeholder: "Add your own options to vote on",
+                        data_idx: idx,
                     ] %>
-                    <%= hidden_input f, :idx, value: idx %>
-                    <%= hidden_input f, :form, value: id %>
-                    <%= submit "add", disabled %>
+                    <button>add</button>
                 </div>
             <% end %>
         <% end %>
+        <hr/>
+        <div class="row fl-baseline">
+            <%= submit "Submit Vote!", class: "mr1" %>
+            <p><i>you can change your vote later by coming back to this page</i></p>
+        </div>
     <% end %>
-
-    <hr/>
-    <div class="row fl-baseline">
-        <button phx-click="submit-vote" class="button mr1">Submit Vote!</button>
-        <p><i>you can change your vote later by coming back to this page</i></p>
-    </div>
     <br/><br/><br/><br/><br/><br/><br/>
 </div>
