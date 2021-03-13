@@ -51,20 +51,6 @@ defmodule Vote.Ballots.ResponseSet do
     |> Repo.transaction()
   end
 
-  def update_item(cs, item_id) do
-    new_responses = cs
-    |> get_change(:responses)
-    |> Enum.map(fn change ->
-      case get_change(change, :ballot_item).data.id do
-        ^item_id ->
-          new_ballot = Repo.get(BallotItem, item_id)
-          put_change(change, :ballot_item, new_ballot)
-        _ -> change
-      end
-    end)
-    put_embed(cs, :responses, new_responses)
-  end
-
   def changeset(response_set, attrs, ballot, account) do
     changesets = ballot.ballot_items
     |> Enum.with_index()

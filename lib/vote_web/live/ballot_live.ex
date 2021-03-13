@@ -29,7 +29,7 @@ defmodule VoteWeb.BallotLive do
   @impl true
   def handle_event("add_option", %{"option" => option, "idx" => idx}, socket) do
     idx = String.to_integer(idx)
-    item_id = Enum.at(socket.assigns.cs.data.ballot.ballot_items, idx).id
+    item_id = Enum.at(socket.assigns.ballot.ballot_items, idx).id
     option = String.trim(option)
 
     socket
@@ -38,18 +38,17 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def handle_event("vote", %{"response_set" => params}, socket) do
+  def handle_info({:update_item, _item_id}, socket) do
     socket
-    |> update_cs(params)
-    |> save_cs()
+    |> assign(ballot: Ballots.by_id(socket.assigns.ballot.id))
     |> noreply()
   end
 
   @impl true
-  def handle_info({:update_item, item_id}, socket) do
-    socket.assigns.cs
-    |> ResponseSet.update_item(item_id)
-    |> (fn cs -> assign(socket, cs: cs) end).()
+  def handle_event("vote", %{"response_set" => params}, socket) do
+    socket
+    |> update_cs(params)
+    |> save_cs()
     |> noreply()
   end
 
@@ -72,7 +71,7 @@ defmodule VoteWeb.BallotLive do
   end
 
   def broadcast_listener(socket, data) do
-    id = socket.assigns.cs.data.ballot.id
+    id = socket.assigns.ballot.id
     PubSub.broadcast(Vote.PubSub, "ballot/#{id}/listener", data)
     socket
   end
