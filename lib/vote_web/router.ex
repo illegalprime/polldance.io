@@ -46,6 +46,7 @@ defmodule VoteWeb.Router do
     live "/app", PageLive, :index
     live "/new", NewPollLive, :index
     live "/ballot/:ballot", BallotLive, :index
+    live "/ballot/:ballot/results", ResultsLive, :index
   end
 
   # Other scopes may use custom stacks.

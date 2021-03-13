@@ -61,7 +61,7 @@
 
             <div class="ballot-item-settings">
                 <%= label p, :voting_method, "Voting method: " %>
-                <%= select p, :voting_method, ["Rank Choice": :rank_choice] %>
+                <%= select p, :voting_method, Map.to_list(voting_methods()) %>
             </div>
             <div class="ballot-item-settings">
                 <%= label p, :appendable, "Allow others to add options:" %>

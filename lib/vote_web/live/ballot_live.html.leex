@@ -1,23 +1,21 @@
 <div class="container ballot-view">
-    <%= form_for @cs, "#", [
-        phx_submit: :vote_submit,
-        phx_change: :vote_change,
-    ], fn f -> %>
+    <%= form_for @cs, "#", [phx_submit: :vote, phx_change: :vote], fn f -> %>
         <div class="row">
-            <h1><%= @cs.data.ballot.title %></h1>
+            <h1 class="<%= if @ballot.desc do "" else "mb0" end %>">
+                <%= @ballot.title %>
+            </h1>
         </div>
-        <%= if @cs.data.ballot.desc do %>
+        <%= if @ballot.desc do %>
             <div class="row">
                 <div class="ballot-desc">
-                    <%= render_markdown(@cs.data.ballot.desc) %>
+                    <%= render_markdown(@ballot.desc) %>
                 </div>
             </div>
         <% end %>
 
         <%= inputs_for f, :responses, fn p -> %>
             <% idx = p.index %>
-            <% response = Enum.at(@cs.changes.responses, idx) %>
-            <% item = response.changes.ballot_item.data %>
+            <% item = Enum.at(@ballot.ballot_items, idx) %>
             <hr/>
             <div class="row">
                 <h2><%= item.title %></h2>
@@ -30,10 +28,8 @@
                 </div>
             <% end %>
             <div class="row">
-                <%#= ranking_input p, :response, item.options, item_idx: idx %>
-                <%#= rating_input p, :response, item.options, n: 5 %>
-                <%#= approval_input p, :response, item.options %>
-                <%= select_one_input p, :response, item.options %>
+            <% opts = [item_idx: idx] %>
+            <%= voting_input(item.voting_method, p, :response, item.options, opts) %>
             </div>
             <%= if item.appendable do %>
                 <div class="row mb0"
@@ -51,8 +47,10 @@
         <% end %>
         <hr/>
         <div class="row fl-baseline">
-            <%= submit "Submit Vote!", class: "mr1" %>
-            <p><i>you can change your vote later by coming back to this page</i></p>
+            <a href="" class="mr1 button">view results</a>
+            <p><i>
+                (your vote is saved automatically)
+            </i></p>
         </div>
     <% end %>
     <br/><br/><br/><br/><br/><br/><br/>

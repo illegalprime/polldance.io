@@ -1,0 +1,19 @@
+
+<%= for item <- @responses do %>
+    <table>
+        <thead>
+            <th>User</th>
+            <th>Response</th>
+        </thead>
+        <tbody>
+            <%= for response <- item do %>
+                <tr>
+                    <td><%= response.account_id %></td>
+                    <td><%= inspect(response.response) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% end %>
+
+

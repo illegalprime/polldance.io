@@ -6,9 +6,6 @@ defmodule VoteWeb.BallotLive do
   alias Vote.Ballots.ResponseSet
   alias Vote.Token
 
-  def ok(socket), do: {:ok, socket}
-  def noreply(socket), do: {:noreply, socket}
-
   @impl true
   def mount(%{"ballot" => token}, session, socket) do
     with {:ok, id} <- Token.verify_ballot_token(token) do
@@ -16,13 +13,10 @@ defmodule VoteWeb.BallotLive do
       LiveState.register(id)
       PubSub.subscribe(Vote.PubSub, "ballot/#{id}/update")
 
-      ballot = Ballots.by_id(id)
-      prev_resp = %ResponseSet{}  # TODO: load
-
       socket
-      |> assign(cs: ResponseSet.changeset(prev_resp, %{}, ballot, user))
-      |> assign(response_set: prev_resp)
+      |> assign(ballot: Ballots.by_id(id))
       |> assign(user: user)
+      |> update_cs(%{})
       |> ok()
     else
       _ -> socket
@@ -44,16 +38,13 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def handle_event("vote_change", %{"response_set" => params}, socket) do
-    assign(socket, cs: update_cs(socket, params)) |> noreply()
+  def handle_event("vote", %{"response_set" => params}, socket) do
+    socket
+    |> update_cs(params)
+    |> save_cs()
+    |> noreply()
   end
 
-  @impl true
-  def handle_event("vote_submit", %{"response_set" => _params}, _socket) do
-    # cs = update_cs(socket, params))
-  end
-
-  # TODO: what if someone is mid-drag while something is appended?
   @impl true
   def handle_info({:update_item, item_id}, socket) do
     socket.assigns.cs
@@ -64,19 +55,40 @@ defmodule VoteWeb.BallotLive do
 
   def update_cs(socket, params) do
     # update to new ballot in case it was changed
-    ballot = Ballots.by_id(socket.assigns.cs.data.ballot.id)
+    ballot = Ballots.by_id(socket.assigns.ballot.id)
     # get the current user from the socket
     user = socket.assigns.user
     # get the yet-to-be edited response set
-    # TODO: should this be re-gotten? user voting from multiple windows?
-    response_set = socket.assigns.response_set
+    response_set = ResponseSet.find(user.id, ballot.id)
     # make a new change set from these
-    ResponseSet.changeset(response_set, params, ballot, user)
+    assign(socket, cs: ResponseSet.changeset(response_set, params, ballot, user))
+  end
+
+  def save_cs(socket) do
+    ResponseSet.save(socket.assigns.cs)
+    id = socket.assigns.ballot.id
+    PubSub.broadcast(Vote.PubSub, "ballot/#{id}/vote", :ballot_vote)
+    socket
   end
 
   def broadcast_listener(socket, data) do
     id = socket.assigns.cs.data.ballot.id
     PubSub.broadcast(Vote.PubSub, "ballot/#{id}/listener", data)
     socket
+  end
+
+  def voting_input(method, form, field, options, opts) do
+    fns = %{
+      "plurality"   => {&select_one_input/4, []},
+      "approval"    => {&approval_input/4, []},
+      "star"        => {&rating_input/4, [n: 5]},
+      "rank_choice" => {&ranking_input/4, []},
+      "borda"       => {&ranking_input/4, []},
+      "nauru"       => {&ranking_input/4, []},
+      "schulze"     => {&ranking_input/4, []},
+      "condorcet"   => {&ranking_input/4, []},
+    }
+    {input, base_opts} = fns[method]
+    input.(form, field, options, base_opts ++ opts)
   end
 end

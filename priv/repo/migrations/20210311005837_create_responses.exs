@@ -15,6 +15,6 @@ defmodule Vote.Repo.Migrations.CreateResponses do
     create index(:responses, [:ballot_id])
     create index(:responses, [:account_id])
     create index(:responses, [:ballot_item_id])
-    create unique_index(:responses, [:account_id, :ballot_id])
+    create unique_index(:responses, [:account_id, :ballot_item_id])
   end
 end

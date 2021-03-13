@@ -5,11 +5,11 @@ defmodule VoteWeb.Views.InputHelpers.RankingInput do
   # TODO: what happens when fields are added while a user is dragging?
 
   def ranking_input(form, field, options, opts \\ []) do
-    values = Form.input_value(form, field)
     id = Form.input_id(form, field)
+    values = Form.input_value(form, field)
 
     # add the divider to the list of rows to render (-1 is the divider)
-    options_idxs = -1..length(options) - 1
+    options_idxs = Enum.map(-1..length(options) - 1, &to_string/1)
     # get any new options that might have been added
     new_options = options_idxs |> Enum.filter(&(!Map.has_key?(values, &1)))
     # there are no holes in rank voting, so sort and convert to list
@@ -47,12 +47,13 @@ defmodule VoteWeb.Views.InputHelpers.RankingInput do
   end
 
   defp table_body(form, field, idxs, options) do
-    div_idx = Enum.find_index(idxs, fn i -> i == -1 end)
+    div_idx = Enum.find_index(idxs, fn i -> i == "-1" end)
 
     content_tag(:tbody) do
       idxs
       |> Enum.with_index()
       |> Enum.map(fn {opt_idx, i} ->
+        opt_idx = String.to_integer(opt_idx)
         opt = Enum.at(options, opt_idx)
         cond do
           i < div_idx  -> table_row(form, field, i, opt, opt_idx, false)

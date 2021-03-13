@@ -96,6 +96,7 @@ defmodule VoteWeb do
       import VoteWeb.Views.InputHelpers.SelectOneInput
       import Vote.Markdown
       alias VoteWeb.Router.Helpers, as: Routes
+      import VoteWeb.Views.Util
     end
   end
 

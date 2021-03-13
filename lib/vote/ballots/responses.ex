@@ -16,13 +16,13 @@ defmodule Vote.Ballots.Responses do
   end
 
   @doc false
-  def changeset(responses, attrs, account, ballot, ballot_item) do
+  def changeset(responses, attrs, account_id, ballot_id, ballot_item) do
     responses
     |> cast(attrs, [:response, :append])
-    |> put_assoc(:account, account)
-    |> put_assoc(:ballot, ballot)
-    |> put_assoc(:ballot_item, ballot_item)
+    |> put_change(:account_id, account_id)
+    |> put_change(:ballot_id, ballot_id)
+    |> put_change(:ballot_item_id, ballot_item.id)
     |> put_change(:type, ballot_item.voting_method)
-    |> validate_required([:type, :ballot, :ballot_item, :account])
+    |> validate_required([:type, :ballot_id, :ballot_item_id, :account_id])
   end
 end

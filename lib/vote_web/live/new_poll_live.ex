@@ -2,9 +2,6 @@ defmodule VoteWeb.NewPollLive do
   use VoteWeb, :live_view
   alias Vote.Ballots
 
-  def ok(socket), do: {:ok, socket}
-  def noreply(socket), do: {:noreply, socket}
-
   @impl true
   def mount(_params, session, socket) do
     {:ok, user} = VoteWeb.Authentication.load_user(session)
@@ -64,5 +61,18 @@ defmodule VoteWeb.NewPollLive do
     socket
     |> assign(cs: Ballots.delete_option(socket.assigns.cs, item, idx))
     |> noreply()
+  end
+
+  def voting_methods() do
+    %{
+      "Approval" => "approval",
+      "Borda" => "borda",
+      "Borda (Naura)" => "nauru",
+      "Condorcet" => "condorcet",
+      "Majority / Plurality" => "plurality",
+      "Ranked Choice" => "rank_choice",
+      "Schulze" => "schulze",
+      "STAR" => "star",
+    }
   end
 end
