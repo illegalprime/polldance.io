@@ -15,7 +15,7 @@ defmodule VoteWeb.ResultsLive do
       |> ok()
     else
       _ -> socket
-      |> put_flash(:error, "Invalid or expired (100 days) ballot link.")
+      |> put_flash(:error, "Invalid ballot link.")
       |> redirect(to: Routes.homepage_path(socket, :index))
       |> ok()
     end

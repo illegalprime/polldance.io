@@ -187,7 +187,8 @@ ol.input_container {
 table.drag-table {
     margin-bottom: 1rem;
     border-bottom: 0.1rem solid #e1e1e1;
-    .drag-handle {
+    td.opt-drag {
+        cursor: move;
     }
     td {
         border-top: 0.1rem solid #e1e1e1;

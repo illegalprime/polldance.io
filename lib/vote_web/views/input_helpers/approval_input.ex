@@ -36,11 +36,12 @@ defmodule VoteWeb.Views.InputHelpers.ApprovalInput do
     id = Form.input_id(form, field)
     name = Form.input_name(form, field)
     values = Form.input_value(form, field)
+    checked = values[Integer.to_string(opt_idx)] == 1
 
     input_opts = [
       id: "#{id}_#{opt_idx}",
       name: "#{name}[#{opt_idx}]",
-    ] ++ (if values[opt_idx] == 1 do [checked: true] else [] end)
+    ] ++ if checked, do: [checked: true], else: []
 
     content_tag(:tr) do
       [

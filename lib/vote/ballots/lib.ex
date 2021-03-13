@@ -1,15 +1,29 @@
 defmodule Vote.Ballots do
   import Ecto.Changeset
+  import Ecto.Query
   alias Vote.Repo
   alias __MODULE__.{Ballot, BallotItem}
 
   def authored_by_user(user) do
-    Repo.preload(user, [:authored_ballots])
+    query = from b in Ballot,
+      where: b.account_id == ^user.id,
+      select: b,
+      order_by: [desc: b.inserted_at]
+
+    Repo.all(query)
   end
 
   def by_id(id) do
-    Repo.get(Ballot, id)
-    |> Repo.preload([:ballot_items])
+    query = from b in Ballot,
+      where: b.id == ^id,
+      select: b,
+      preload: [
+        ballot_items: ^from(
+          item in BallotItem,
+          order_by: [asc: item.id]
+        )
+      ]
+    Repo.one(query)
   end
 
   def save(params, user) do

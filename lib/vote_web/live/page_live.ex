@@ -8,7 +8,7 @@ defmodule VoteWeb.PageLive do
   @impl true
   def mount(_params, session, socket) do
     {:ok, user} = Authentication.load_user(session)
-    my_ballots = Ballots.authored_by_user(user).authored_ballots
+    my_ballots = Ballots.authored_by_user(user)
     voted_ballots = ResponseSet.find_ballots(user.id)
 
     socket

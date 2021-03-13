@@ -32,15 +32,16 @@ defmodule VoteWeb.Views.InputHelpers.SelectOneInput do
     |> Enum.map(fn {o, i} -> table_row(form, field, o, i, params) end)
   end
 
-  defp table_row(form, field, opt, opt_idx, params) do
+  defp table_row(form, field, opt, opt_idx, _params) do
     id = Form.input_id(form, field)
     name = Form.input_name(form, field)
     value = Form.input_value(form, field)
+    checked = value[Integer.to_string(opt_idx)]
 
     input_opts = [
       id: "#{id}_#{opt_idx}",
       name: "#{name}",
-    ] ++ (if value[opt_idx] do [checked: true] else [] end)
+    ] ++ if checked, do: [checked: true], else: []
 
     content_tag(:tr) do
       [

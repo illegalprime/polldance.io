@@ -51,11 +51,12 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
     values = Form.input_value(form, field)
 
     Enum.map(1..params[:n], fn i ->
+      checked = values[Integer.to_string(idx)] == i
       input_opts = [
         class: "rank-star",
         id: "#{id}_#{idx}_#{i}",
         name: "#{name}[#{idx}]",
-      ] ++ (if values[idx] == i do [checked: true] else [] end)
+      ] ++ if checked, do: [checked: true], else: []
       [
         Form.radio_button(form, :nothing, i, input_opts),
         Form.label(for: input_opts[:id]) do "" end,

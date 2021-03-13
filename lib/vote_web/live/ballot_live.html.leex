@@ -18,7 +18,7 @@
             <% item = Enum.at(@ballot.ballot_items, idx) %>
             <hr/>
             <div class="row">
-                <h2><%= item.title %></h2>
+                <h2><%= idx + 1 %>. <%= item.title %></h2>
             </div>
             <%= if item.desc do %>
                 <div class="row">
@@ -46,8 +46,9 @@
             <% end %>
         <% end %>
         <hr/>
+        <% res = Routes.results_url(@socket, :index, ballot_token(@ballot)) %>
         <div class="row fl-baseline">
-            <a href="" class="mr1 button">view results</a>
+            <a href="<%= res %>" class="mr1 button">view results</a>
             <p><i>
                 (your vote is saved automatically)
             </i></p>

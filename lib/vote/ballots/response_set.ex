@@ -27,6 +27,7 @@ defmodule Vote.Ballots.ResponseSet do
       join: ballot in Vote.Ballots.Ballot,
       on: ballot.id == r.ballot_id,
       where: r.account_id == ^account_id,
+      order_by: [desc: ballot.inserted_at],
       select: ballot,
       distinct: true
 
@@ -100,7 +101,7 @@ defmodule Vote.Ballots.ResponseSet do
     |> (fn r -> %{ params | "response" => r } end).()
   end
   def convert_responses(%{"response" => item} = params) when is_binary(item) do
-    %{ params | "response" => %{to_int(item) => 1} }
+    %{ params | "response" => %{item => 1} }
   end
   def convert_responses(other), do: other
 
