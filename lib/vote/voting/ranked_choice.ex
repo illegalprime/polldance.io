@@ -47,4 +47,9 @@ defmodule Vote.Voting.RankedChoice do
       Map.update(acc, vote, 1, &(&1 + 1))
     end)
   end
+
+  def render(vote) do
+    Voting.rank_order(vote)
+    |> Enum.map(fn o -> {o, nil} end)
+  end
 end

@@ -30,4 +30,8 @@ defmodule Vote.Voting.Star do
       winner == 0 -> [{a, nil}, {b, nil}]
     end
   end
+
+  def render(vote) do
+    Enum.sort_by(vote, fn {_, v} -> -v end)
+  end
 end

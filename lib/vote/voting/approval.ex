@@ -14,4 +14,9 @@ defmodule Vote.Voting.Approval do
       Map.put(sum, option, Map.get(sum, option, 0) + value)
     end)
   end
+
+  def render(response) do
+    Enum.reject(response, fn {_, v} -> v == 0 end)
+    |> Enum.map(fn {k, _} -> {k, nil} end)
+  end
 end

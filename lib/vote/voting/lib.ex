@@ -58,6 +58,16 @@ defmodule Vote.Voting do
     {idxs_to_opts(winner, options), idxs_to_opts(results, options)}
   end
 
+  def render(method, vote, options) do
+    fns = %{
+      "plurality"   => &Approval.render/1,
+      "approval"    => &Approval.render/1,
+      "star"        => &Star.render/1,
+      "rank_choice" => &RankedChoice.render/1,
+    }
+    fns[method].(vote) |> idxs_to_opts(options)
+  end
+
   def rank_order(vote) do
     vote
     |> Enum.sort_by(fn {_, v} -> v end)

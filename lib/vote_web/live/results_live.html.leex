@@ -54,3 +54,41 @@
 
 <hr/>
 <h2>Detailed Report for <i><%= @ballot.title %></i></h2>
+<%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
+  <% responses = @responses[item.id] %>
+  <%= if responses do %>
+    <%= if not quick? do %>
+      <h3><%= idx + 1 %>. <%= item.title %></h3>
+    <% end %>
+    <table>
+      <thead>
+        <th>User</th>
+        <th class="w100">Response</th>
+      </thead>
+      <tbody>
+        <%= for response <- responses do %>
+          <% data = render_vote(
+              item.voting_method, response.response, item.options) %>
+          <tr>
+            <td><%= response.account.email %></td>
+            <td>
+              <%= for {opt, score} <- data do %>
+                <%= if score do %>
+                  <code><%= opt %> [<%= score %>]</code>
+                <% else %>
+                  <code><%= opt %></code>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <%= if quick? do %>
+      <h3>No responses recorded.</h3>
+    <% else %>
+      <h3>No responses for <i><%= item.title %></i>.</h3>
+    <% end %>
+  <% end %>
+<% end %>

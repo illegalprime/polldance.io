@@ -78,4 +78,8 @@ defmodule VoteWeb.ResultsLive do
     votes = Enum.map(responses || [], &(&1.response))
     Voting.tally(method, votes, options)
   end
+
+  def render_vote(method, response, options) do
+    Voting.render(method, response, options)
+  end
 end
