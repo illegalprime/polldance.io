@@ -5,6 +5,7 @@ defmodule Vote.Ballots.Ballot do
   schema "ballots" do
     field :title, :string
     field :desc, :string
+    field :slug, :string
     field :public, :boolean, default: true
     has_many :ballot_items, Vote.Ballots.BallotItem
     belongs_to :account, Vote.Accounts.Account
@@ -17,7 +18,14 @@ defmodule Vote.Ballots.Ballot do
     ballot
     |> cast(attrs, [:title, :desc, :public])
     |> cast_assoc(:ballot_items, required: true)
-    |> validate_required([:title])
+    |> validate_required([:title, :slug])
     |> unique_constraint(:title)
+  end
+
+  def update_slug(cs) do
+    case get_field(cs, :slug, nil) do
+      nil -> put_change(cs, :slug, Nanoid.generate())
+      _cs -> cs
+    end
   end
 end

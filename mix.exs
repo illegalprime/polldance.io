@@ -56,6 +56,7 @@ defmodule Vote.MixProject do
       {:bamboo, "~> 1.7"},
       {:earmark, "~> 1.4"},
       {:phoenix_html_sanitizer, "~> 1.1"},
+      {:nanoid, "~> 2.0"},
     ]
   end
 

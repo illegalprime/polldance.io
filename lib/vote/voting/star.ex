@@ -9,7 +9,7 @@ defmodule Vote.Voting.Star do
     # then pick the two highest scoring and run-off
     winner = results
     |> Enum.sort_by(fn {_, v} -> -v end)
-    |> Enum.slice(0..1)
+    |> Enum.slice(0..1)  # TODO: more than two tied for second?
     |> Enum.map(fn {k, _} -> k end)
     |> runoff(votes)
 

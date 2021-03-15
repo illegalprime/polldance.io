@@ -46,7 +46,7 @@
             <% end %>
         <% end %>
         <hr/>
-        <% res = Routes.results_url(@socket, :index, ballot_token(@ballot)) %>
+        <% res = Routes.results_url(@socket, :index, @ballot.slug) %>
         <div class="row fl-baseline">
             <a href="<%= res %>" class="mr1 button">view results</a>
             <p><i>

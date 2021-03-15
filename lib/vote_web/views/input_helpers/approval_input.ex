@@ -2,7 +2,7 @@ defmodule VoteWeb.Views.InputHelpers.ApprovalInput do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
-  def approval_input(form, field, options, params \\ []) do
+  def approval_input(form, field, options, _params \\ []) do
     table_opts = [
       id: Form.input_id(form, field),
       class: "approval-table",
@@ -10,7 +10,7 @@ defmodule VoteWeb.Views.InputHelpers.ApprovalInput do
     content_tag(:table, table_opts) do
       [
         table_header(),
-        table_body(form, field, options, params),
+        table_body(form, field, options),
       ]
     end
   end
@@ -26,13 +26,13 @@ defmodule VoteWeb.Views.InputHelpers.ApprovalInput do
     end
   end
 
-  defp table_body(form, field, options, params) do
+  defp table_body(form, field, options) do
     options
     |> Enum.with_index()
-    |> Enum.map(fn {o, i} -> table_row(form, field, o, i, params) end)
+    |> Enum.map(fn {o, i} -> table_row(form, field, o, i) end)
   end
 
-  defp table_row(form, field, opt, opt_idx, params) do
+  defp table_row(form, field, opt, opt_idx) do
     id = Form.input_id(form, field)
     name = Form.input_name(form, field)
     values = Form.input_value(form, field)

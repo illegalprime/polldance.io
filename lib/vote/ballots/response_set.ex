@@ -6,7 +6,6 @@ defmodule Vote.Ballots.ResponseSet do
   alias __MODULE__
   alias Ecto.Multi
   alias Vote.Repo
-  alias Vote.Ballots.BallotItem
   alias Vote.Ballots.Responses
 
   embedded_schema do

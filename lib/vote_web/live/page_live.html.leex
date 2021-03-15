@@ -8,8 +8,8 @@
                 <th>Results</th>
             </tr>
             <%= for ballot <- @voted_ballots do %>
-                <% vote = Routes.ballot_url(@socket, :index, ballot_token(ballot)) %>
-                <% results = Routes.results_url(@socket, :index, ballot_token(ballot)) %>
+                <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
+                <% results = Routes.results_url(@socket, :index, ballot.slug) %>
                 <tr>
                     <td>
                         <%= ballot.title %>
@@ -34,8 +34,8 @@
                 <th>Results</th>
             </tr>
             <%= for ballot <- @my_ballots do %>
-                <% vote = Routes.ballot_url(@socket, :index, ballot_token(ballot)) %>
-                <% results = Routes.results_url(@socket, :index, ballot_token(ballot)) %>
+                <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
+                <% results = Routes.results_url(@socket, :index, ballot.slug) %>
                 <tr>
                     <td>
                         <%= ballot.title %>

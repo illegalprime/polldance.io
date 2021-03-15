@@ -13,9 +13,9 @@ defmodule Vote.Ballots do
     Repo.all(query)
   end
 
-  def by_id(id) do
+  def by_slug(slug) do
     query = from b in Ballot,
-      where: b.id == ^id,
+      where: b.slug == ^slug,
       select: b,
       preload: [
         ballot_items: ^from(
@@ -29,6 +29,7 @@ defmodule Vote.Ballots do
   def save(params, user) do
     build_ballot(params)
     |> put_assoc(:account, user)
+    |> Ballot.update_slug()
     |> Repo.insert()
   end
 

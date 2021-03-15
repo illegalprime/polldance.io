@@ -5,28 +5,29 @@ defmodule VoteWeb.BallotLive do
   alias Vote.Ballots.LiveState
   alias Vote.Ballots.ResponseSet
   alias Vote.Voting
-  alias Vote.Token
+
+  def load_ballot(socket, nil) do
+    socket
+    |> put_flash(:error, "Invalid ballot link.")
+    |> redirect(to: Routes.homepage_path(socket, :index))
+  end
+
+  def load_ballot(socket, ballot) do
+    LiveState.register(ballot.id)
+    PubSub.subscribe(Vote.PubSub, "ballot/#{ballot.id}/update")
+    socket
+    |> assign(ballot: ballot)
+    |> assign(page_title: ballot.title)
+    |> update_cs(%{})
+  end
 
   @impl true
-  def mount(%{"ballot" => token}, session, socket) do
-    with {:ok, id} <- Token.verify_ballot_token(token) do
-      {:ok, user} = VoteWeb.Authentication.load_user(session)
-      LiveState.register(id)
-      PubSub.subscribe(Vote.PubSub, "ballot/#{id}/update")
-      ballot = Ballots.by_id(id)
-
-      socket
-      |> assign(ballot: ballot)
-      |> assign(user: user)
-      |> assign(page_title: ballot.title)
-      |> update_cs(%{})
-      |> ok()
-    else
-      _ -> socket
-      |> put_flash(:error, "Invalid ballot link.")
-      |> redirect(to: Routes.homepage_path(socket, :index))
-      |> ok()
-    end
+  def mount(%{"ballot" => slug}, session, socket) do
+    {:ok, user} = VoteWeb.Authentication.load_user(session)
+    socket
+    |> assign(user: user)
+    |> load_ballot(Ballots.by_slug(slug))
+    |> ok()
   end
 
   @impl true
@@ -51,13 +52,13 @@ defmodule VoteWeb.BallotLive do
   @impl true
   def handle_info({:update_item, _item_id}, socket) do
     socket
-    |> assign(ballot: Ballots.by_id(socket.assigns.ballot.id))
+    |> assign(ballot: Ballots.by_slug(socket.assigns.ballot.slug))
     |> noreply()
   end
 
   def update_cs(socket, params) do
     # update to new ballot in case it was changed
-    ballot = Ballots.by_id(socket.assigns.ballot.id)
+    ballot = Ballots.by_slug(socket.assigns.ballot.slug)
     # get the current user from the socket
     user = socket.assigns.user
     # get the yet-to-be edited response set

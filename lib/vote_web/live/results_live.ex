@@ -1,28 +1,30 @@
 defmodule VoteWeb.ResultsLive do
   use VoteWeb, :live_view
   alias Phoenix.PubSub
-  alias Vote.Token
   alias Vote.Voting
   alias Vote.Ballots
   alias Vote.Ballots.ResponseSet
 
-  @impl true
-  def mount(%{"ballot" => token}, _session, socket) do
-    with {:ok, id} <- Token.verify_ballot_token(token) do
-      PubSub.subscribe(Vote.PubSub, "ballot/#{id}/vote")
-      PubSub.subscribe(Vote.PubSub, "ballot/#{id}/update")
+  def load_ballot(socket, nil) do
+    socket
+    |> put_flash(:error, "Invalid ballot link.")
+    |> redirect(to: Routes.homepage_path(socket, :index))
+  end
 
-      socket
-      |> assign(ballot: Ballots.by_id(id))
-      |> assign(page_title: "Results")
-      |> update_responses()
-      |> ok()
-    else
-      _ -> socket
-      |> put_flash(:error, "Invalid ballot link.")
-      |> redirect(to: Routes.homepage_path(socket, :index))
-      |> ok()
-    end
+  def load_ballot(socket, ballot) do
+    PubSub.subscribe(Vote.PubSub, "ballot/#{ballot.id}/vote")
+    PubSub.subscribe(Vote.PubSub, "ballot/#{ballot.id}/update")
+    socket
+    |> assign(ballot: ballot)
+    |> assign(page_title: "Results")
+    |> update_responses()
+  end
+
+  @impl true
+  def mount(%{"ballot" => slug}, _session, socket) do
+    socket
+    |> load_ballot(Ballots.by_slug(slug))
+    |> ok()
   end
 
   @impl true
@@ -40,7 +42,7 @@ defmodule VoteWeb.ResultsLive do
   end
 
   def update_ballot(socket) do
-    assign(socket, ballot: Ballots.by_id(socket.assigns.ballot.id))
+    assign(socket, ballot: Ballots.by_slug(socket.assigns.ballot.slug))
   end
 
   def update_responses(socket) do

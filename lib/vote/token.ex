@@ -17,12 +17,4 @@ defmodule Vote.Token do
     max_age = 86_400 # tokens that are older than a day should be invalid
     Phoenix.Token.verify(Endpoint, @account_verify_salt, token, max_age: max_age)
   end
-
-  def gen_ballot_token(%Ballot{id: id}) do
-    Phoenix.Token.sign(Endpoint, @ballot_salt, id, signed_at: 0)
-  end
-
-  def verify_ballot_token(token) do
-    Phoenix.Token.verify(Endpoint, @ballot_salt, token, max_age: :infinity)
-  end
 end

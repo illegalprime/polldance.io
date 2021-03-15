@@ -79,7 +79,7 @@ defmodule Vote.Voting do
     Enum.reduce(options, count, fn opt, running ->
       case Map.get(running, opt) do
         nil -> Map.put(running, opt, default)
-        val -> running
+        _el -> running
       end
     end)
   end

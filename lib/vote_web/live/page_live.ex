@@ -1,7 +1,6 @@
 defmodule VoteWeb.PageLive do
   use VoteWeb, :live_view
   alias VoteWeb.Authentication
-  alias Vote.Token
   alias Vote.Ballots
   alias Vote.Ballots.ResponseSet
 
@@ -17,10 +16,5 @@ defmodule VoteWeb.PageLive do
     |> assign(my_ballots: my_ballots)
     |> assign(voted_ballots: voted_ballots)
     |> ok()
-  end
-
-  def ballot_link(socket, ballot) do
-    token = Token.gen_ballot_token(ballot)
-    Routes.ballot_url(socket, :index, token)
   end
 end
