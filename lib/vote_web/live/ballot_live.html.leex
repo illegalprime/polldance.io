@@ -13,12 +13,11 @@
       </div>
     <% end %>
 
-    <% quick? = length(@ballot.ballot_items) == 1 %>
     <%= inputs_for f, :responses, fn p -> %>
       <% idx = p.index %>
       <% item = Enum.at(@ballot.ballot_items, idx) %>
       <hr/>
-      <% if not quick? do %>
+      <%= if length(@ballot.ballot_items) > 1 do %>
         <div class="row">
           <h2><%= idx + 1 %>. <%= item.title %></h2>
         </div>

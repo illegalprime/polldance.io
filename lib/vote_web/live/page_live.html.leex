@@ -3,7 +3,7 @@
   <div class="row">
     <table>
       <tr>
-        <th>Title</th>
+        <th class="w100">Title</th>
         <th>Vote</th>
         <th>Results</th>
       </tr>
@@ -11,7 +11,7 @@
         <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
         <% results = Routes.results_url(@socket, :index, ballot.slug) %>
         <tr>
-          <td>
+          <td class="w100">
             <%= ballot.title %>
           </td>
           <td>
@@ -29,7 +29,7 @@
   <div class="row">
     <table>
       <tr>
-        <th>Title</th>
+        <th class="w100">Title</th>
         <th>Vote</th>
         <th>Results</th>
       </tr>
@@ -37,7 +37,7 @@
         <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
         <% results = Routes.results_url(@socket, :index, ballot.slug) %>
         <tr>
-          <td>
+          <td class="w100">
             <%= ballot.title %>
           </td>
           <td>

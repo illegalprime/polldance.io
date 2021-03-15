@@ -37,8 +37,12 @@ defmodule Vote.Voting do
   end
 
   def tally(method, votes, options) do
-    opt_idxs = 0..length(options) - 1
-    |> Enum.map(&Integer.to_string/1)
+    opt_idxs = if Enum.empty?(options) do
+      []
+    else
+      0..length(options) - 1
+      |> Enum.map(&Integer.to_string/1)
+    end
 
     fns = %{
       "plurality"   => &Approval.tally/2,

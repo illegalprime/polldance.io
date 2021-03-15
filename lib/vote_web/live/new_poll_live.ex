@@ -25,16 +25,14 @@ defmodule VoteWeb.NewPollLive do
   def handle_event("save", %{"ballot" => ballot}, socket) do
     case Ballots.save(ballot, socket.assigns.account) do
       {:error, %Ecto.Changeset{} = cs} ->
-        require Logger
-        Logger.warn("changeset #{inspect(cs, pretty: true)}")
         socket
         |> assign(cs: cs)
         |> noreply()
 
-      {:ok, _} ->
+      {:ok, ballot} ->
         socket
         |> put_flash(:info, "Published successfully!")
-        |> push_redirect(to: Routes.page_path(socket, :index))
+        |> push_redirect(to: Routes.ballot_url(socket, :index, ballot.slug))
         |> noreply()
     end
   end
