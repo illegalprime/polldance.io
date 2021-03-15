@@ -1,51 +1,53 @@
 <h2>Results for <i><%= @ballot.title %></i></h2>
+<% quick? = length(@ballot.ballot_items) == 1 %>
 <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
-    <% responses = @responses[item.id] %>
-    <% {winners, results} = tally(item.voting_method, responses, item.options) %>
+  <% responses = @responses[item.id] %>
+  <% {winners, results} = tally(item.voting_method, responses, item.options) %>
+
+  <% if not quick? do %>
     <h3><%= idx + 1 %>. <%= item.title %></h3>
+  <% end %>
 
-    <%= if not Enum.empty?(winners) do %>
-        <div class="row" style="justify-content:center;">
-            <h1 style="font-weight:bold;">
-                <%= display_many(Enum.map(winners, &(elem(&1, 0)))) %>
-            </h1>
-        </div>
-        <div class="row" style="justify-content:center;">
-            <h3>
-                <%= if length(winners) > 1 do %>
-                    are the Winners!
-                <% else %>
-                    is the Winner!
-                <% end %>
-            </h3>
-        </div>
-    <% else %>
-        <div class="row" style="justify-content:center;opacity:0.5;">
-            <h1 style="font-weight:bold;"><i>___</i></h1>
-        </div>
-        <div class="row" style="justify-content:center;opacity:0.5;">
-            <h3><i>No winner selected.</i></h3>
-        </div>
-    <% end %>
+  <%= if not Enum.empty?(winners) do %>
+    <div class="row" style="justify-content:center;">
+      <h1 style="font-weight:bold;">
+        <%= display_many(Enum.map(winners, &(elem(&1, 0)))) %>
+      </h1>
+    </div>
+    <div class="row" style="justify-content:center;">
+      <h3>
+        <%= if length(winners) > 1 do %>
+          are the Winners!
+        <% else %>
+          is the Winner!
+        <% end %>
+      </h3>
+    </div>
+  <% else %>
+    <div class="row" style="justify-content:center;opacity:0.5;">
+      <h1 style="font-weight:bold;"><i>___</i></h1>
+    </div>
+    <div class="row" style="justify-content:center;opacity:0.5;">
+      <h3><i>No winner selected.</i></h3>
+    </div>
+  <% end %>
 
-    <%= if not Enum.empty?(results) do %>
+  <%= if not Enum.empty?(results) do %>
     <table>
-        <thead>
-            <th class="ta-center">Rank</th>
-            <th class="w100">Response</th>
-            <th class="ta-center">Score</th>
-        </thead>
-        <tbody>
-            <%= for {opt, score, rank} <- add_ranks(results) do %>
-                <tr>
-                    <td class="ta-center"><%= rank %></td>
-                    <td class="w100"><code><%= opt %></code></td>
-                    <td class="ta-center"><%= score %></td>
-                </tr>
-            <% end %>
-        </tbody>
+      <thead>
+        <th class="ta-center">Rank</th>
+        <th class="w100">Response</th>
+        <th class="ta-center">Score</th>
+      </thead>
+      <tbody>
+        <%= for {opt, score, rank} <- add_ranks(results) do %>
+          <tr>
+            <td class="ta-center"><%= rank %></td>
+            <td class="w100"><code><%= opt %></code></td>
+            <td class="ta-center"><%= score %></td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
-    <% end %>
+  <% end %>
 <% end %>
-
-

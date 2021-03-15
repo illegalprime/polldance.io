@@ -18,8 +18,14 @@ defmodule Vote.Ballots.BallotItem do
     ballot_item
     |> cast(attrs, [:title, :desc, :voting_method, :appendable])
     |> put_options(Map.get(attrs, "options") || attrs[:options])
-    |> validate_required([:title, :options, :voting_method, :appendable])
+    |> validate_required([:options, :voting_method, :appendable])
+    |> quick_validations(Map.get(attrs, "quick?", false))
     |> unique_constraint(:title)
+  end
+
+  def quick_validations(cs, true), do: cs
+  def quick_validations(cs, false) do
+    validate_required(cs, [:title])
   end
 
   def push_option_cs(ballot_item, option) do

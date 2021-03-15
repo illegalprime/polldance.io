@@ -15,19 +15,19 @@
       <section class="container">
         <div class="row logo-container">
           <div class="column" style="order:1">
-              <a href="/">
-                  <h1>🗳️💃🕺 Poll Dance.io</h1>
-              </a>
+            <a href="/">
+              <h1>🗳️💃🕺 Poll Dance.io</h1>
+            </a>
           </div>
           <div class="column" style="order:4">
-              <nav role="navigation">
-                  <ul style="margin:0">
-                      <%= if assigns[:account] do %>
-                      <li><%= @account.email %></li>
-                      <li><%= link("Log Out", to: Routes.auth_path(@conn, :logout), method: :delete) %></li>
-                      <% end %>
-                  </ul>
-              </nav>
+            <nav role="navigation">
+              <ul style="margin:0">
+                <%= if assigns[:account] do %>
+                  <li><%= @account.email %></li>
+                  <li><%= link("Log Out", to: Routes.auth_path(@conn, :logout), method: :delete) %></li>
+                <% end %>
+              </ul>
+            </nav>
           </div>
         </div>
       </section>

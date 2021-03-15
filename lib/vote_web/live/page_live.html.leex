@@ -1,58 +1,58 @@
 <div class="container">
-    <div class="row"> <h2>Ballots You've Voted On</h2> </div>
-    <div class="row">
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Vote</th>
-                <th>Results</th>
-            </tr>
-            <%= for ballot <- @voted_ballots do %>
-                <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
-                <% results = Routes.results_url(@socket, :index, ballot.slug) %>
-                <tr>
-                    <td>
-                        <%= ballot.title %>
-                    </td>
-                    <td>
-                        <a href="<%= vote %>">Vote</a>
-                    </td>
-                    <td>
-                        <a href="<%= results %>">Results</a>
-                    </td>
-                </tr>
-            <% end %>
-        </table>
-    </div>
-    <div class="row"> <hr/> </div>
-    <div class="row"> <h2>Ballots You've Made</h2> </div>
-    <div class="row">
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Vote</th>
-                <th>Results</th>
-            </tr>
-            <%= for ballot <- @my_ballots do %>
-                <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
-                <% results = Routes.results_url(@socket, :index, ballot.slug) %>
-                <tr>
-                    <td>
-                        <%= ballot.title %>
-                    </td>
-                    <td>
-                        <a href="<%= vote %>">Vote</a>
-                    </td>
-                    <td>
-                        <a href="<%= results %>">Results</a>
-                    </td>
-                </tr>
-            <% end %>
-        </table>
-    </div>
-    <div class="row">
-        <a href="<%= Routes.new_poll_path(@socket, :index) %>" class="button">
-            new ballot
-        </a>
-    </div>
+  <div class="row"> <h2>Ballots You've Voted On</h2> </div>
+  <div class="row">
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Vote</th>
+        <th>Results</th>
+      </tr>
+      <%= for ballot <- @voted_ballots do %>
+        <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
+        <% results = Routes.results_url(@socket, :index, ballot.slug) %>
+        <tr>
+          <td>
+            <%= ballot.title %>
+          </td>
+          <td>
+            <a href="<%= vote %>">Vote</a>
+          </td>
+          <td>
+            <a href="<%= results %>">Results</a>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+  <div class="row"> <hr/> </div>
+  <div class="row"> <h2>Ballots You've Made</h2> </div>
+  <div class="row">
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Vote</th>
+        <th>Results</th>
+      </tr>
+      <%= for ballot <- @my_ballots do %>
+        <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
+        <% results = Routes.results_url(@socket, :index, ballot.slug) %>
+        <tr>
+          <td>
+            <%= ballot.title %>
+          </td>
+          <td>
+            <a href="<%= vote %>">Vote</a>
+          </td>
+          <td>
+            <a href="<%= results %>">Results</a>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+  <div class="row">
+    <a href="<%= Routes.new_poll_path(@socket, :index) %>" class="button">
+      new ballot
+    </a>
+  </div>
 </div>

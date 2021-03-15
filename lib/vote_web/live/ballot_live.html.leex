@@ -1,58 +1,61 @@
 <div class="container ballot-view">
-    <%= form_for @cs, "#", [phx_submit: :vote, phx_change: :vote], fn f -> %>
-        <div class="row">
-            <h1 class="<%= if @ballot.desc do "" else "mb0" end %>">
-                <%= @ballot.title %>
-            </h1>
+  <%= form_for @cs, "#", [phx_submit: :vote, phx_change: :vote], fn f -> %>
+    <div class="row">
+      <h1 class="<%= if @ballot.desc do "" else "mb0" end %>">
+        <%= @ballot.title %>
+      </h1>
+    </div>
+    <%= if @ballot.desc do %>
+      <div class="row">
+        <div class="ballot-desc">
+          <%= render_markdown(@ballot.desc) %>
         </div>
-        <%= if @ballot.desc do %>
-            <div class="row">
-                <div class="ballot-desc">
-                    <%= render_markdown(@ballot.desc) %>
-                </div>
-            </div>
-        <% end %>
-
-        <%= inputs_for f, :responses, fn p -> %>
-            <% idx = p.index %>
-            <% item = Enum.at(@ballot.ballot_items, idx) %>
-            <hr/>
-            <div class="row">
-                <h2><%= idx + 1 %>. <%= item.title %></h2>
-            </div>
-            <%= if item.desc do %>
-                <div class="row">
-                    <div class="ballot-item-desc">
-                        <%= render_markdown(item.desc) %>
-                    </div>
-                </div>
-            <% end %>
-            <div class="row">
-            <% opts = [item_idx: idx] %>
-            <%= voting_input(item.voting_method, p, :response, item.options, opts) %>
-            </div>
-            <%= if item.appendable do %>
-                <div class="row mb0"
-                     id="add_option_<%= idx %>"
-                     phx-hook="AppendToItem"
-                >
-                    <%= text_input p, :append, [
-                        class: "add_option mr1 mb1",
-                        placeholder: "Add your own options to vote on",
-                        data_idx: idx,
-                    ] %>
-                    <button>add</button>
-                </div>
-            <% end %>
-        <% end %>
-        <hr/>
-        <% res = Routes.results_url(@socket, :index, @ballot.slug) %>
-        <div class="row fl-baseline">
-            <a href="<%= res %>" class="mr1 button">view results</a>
-            <p><i>
-                (your vote is saved automatically)
-            </i></p>
-        </div>
+      </div>
     <% end %>
-    <br/><br/><br/><br/><br/><br/><br/>
+
+    <% quick? = length(@ballot.ballot_items) == 1 %>
+    <%= inputs_for f, :responses, fn p -> %>
+      <% idx = p.index %>
+      <% item = Enum.at(@ballot.ballot_items, idx) %>
+      <hr/>
+      <% if not quick? do %>
+        <div class="row">
+          <h2><%= idx + 1 %>. <%= item.title %></h2>
+        </div>
+        <%= if item.desc do %>
+          <div class="row">
+            <div class="ballot-item-desc">
+              <%= render_markdown(item.desc) %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <div class="row">
+        <% opts = [item_idx: idx] %>
+        <%= voting_input(item.voting_method, p, :response, item.options, opts) %>
+      </div>
+      <%= if item.appendable do %>
+        <div class="row mb0"
+             id="add_option_<%= idx %>"
+             phx-hook="AppendToItem"
+        >
+          <%= text_input p, :append, [
+              class: "add_option mr1 mb1",
+              placeholder: "Add your own options to vote on",
+              data_idx: idx,
+          ] %>
+          <button>add</button>
+        </div>
+      <% end %>
+    <% end %>
+    <hr/>
+    <% res = Routes.results_url(@socket, :index, @ballot.slug) %>
+    <div class="row fl-baseline">
+      <a href="<%= res %>" class="mr1 button">view results</a>
+      <p><i>
+        (your vote is saved automatically)
+      </i></p>
+    </div>
+  <% end %>
+  <br/><br/><br/><br/><br/><br/><br/>
 </div>

@@ -44,6 +44,19 @@ defmodule Vote.Ballots do
   end
 
   def build_ballot(params \\ %{}) do
+    # if there's only one ballot item, set quick? to true
+    ballot_items = Map.get(params, "ballot_items", %{})
+    ballot_items =
+      case Map.to_list(ballot_items) do
+        [] -> %{}
+        [{k, v}] -> %{ ballot_items | k => Map.put(v, "quick?", true) }
+        many ->
+          many
+          |> Enum.map(fn {k, v}  -> {k, Map.put(v, "quick?", false)} end)
+          |> Map.new()
+      end
+    params = Map.put(params, "ballot_items", ballot_items)
+
     %Ballot{}
     |> Repo.preload([:ballot_items])
     |> Ballot.changeset(params)

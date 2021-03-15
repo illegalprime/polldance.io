@@ -18,13 +18,16 @@ defmodule Vote.Ballots.Ballot do
     ballot
     |> cast(attrs, [:title, :desc, :public])
     |> cast_assoc(:ballot_items, required: true)
-    |> validate_required([:title, :slug])
+    |> validate_required([:title])
     |> unique_constraint(:title)
   end
 
   def update_slug(cs) do
     case get_field(cs, :slug, nil) do
-      nil -> put_change(cs, :slug, Nanoid.generate())
+      nil ->
+        cs
+        |> put_change(:slug, Nanoid.generate())
+        |> validate_required(:slug)
       _cs -> cs
     end
   end

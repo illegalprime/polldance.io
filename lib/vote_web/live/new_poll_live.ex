@@ -2,6 +2,7 @@ defmodule VoteWeb.NewPollLive do
   use VoteWeb, :live_view
   alias Vote.Ballots
   alias Vote.Voting
+  alias Ecto.Changeset
 
   @impl true
   def mount(_params, session, socket) do
@@ -24,6 +25,8 @@ defmodule VoteWeb.NewPollLive do
   def handle_event("save", %{"ballot" => ballot}, socket) do
     case Ballots.save(ballot, socket.assigns.account) do
       {:error, %Ecto.Changeset{} = cs} ->
+        require Logger
+        Logger.warn("changeset #{inspect(cs, pretty: true)}")
         socket
         |> assign(cs: cs)
         |> noreply()
