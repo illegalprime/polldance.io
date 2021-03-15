@@ -12,7 +12,7 @@ config :vote,
 
 # Configures the endpoint
 config :vote, VoteWeb.Endpoint,
-  url: [host: "vote.michaels.toys", scheme: "https", port: 443],
+  url: [host: "polldance.io", scheme: "https", port: 443],
   secret_key_base: "8S97EM77A/aP/XRU+EFu6z74fb5cGL8H0NCHxZWqLqED+J4nzRjnzpuY3PA4w3lw",
   render_errors: [view: VoteWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Vote.PubSub,

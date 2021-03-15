@@ -50,8 +50,10 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
     name = Form.input_name(form, field)
     values = Form.input_value(form, field)
 
-    Enum.map(1..params[:n], fn i ->
-      checked = values[Integer.to_string(idx)] == i
+    0..params[:n]
+    |> Enum.reverse()
+    |> Enum.map(fn i ->
+      checked = Map.get(values, Integer.to_string(idx), 0) == i
       input_opts = [
         class: "rank-star",
         id: "#{id}_#{idx}_#{i}",

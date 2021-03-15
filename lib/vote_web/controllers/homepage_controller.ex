@@ -20,6 +20,7 @@ defmodule VoteWeb.HomepageController do
       splash = Routes.static_path(conn, Enum.random(@memes))
       render(conn, :index,
         splash: splash,
+        page_title: "Login",
         login: Routes.auth_path(conn, :login),
         login_cs: Map.get(conn.assigns, :login_cs, @account_cs),
         register: Routes.auth_path(conn, :register),

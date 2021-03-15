@@ -1,6 +1,7 @@
 defmodule VoteWeb.NewPollLive do
   use VoteWeb, :live_view
   alias Vote.Ballots
+  alias Vote.Voting
 
   @impl true
   def mount(_params, session, socket) do
@@ -63,16 +64,5 @@ defmodule VoteWeb.NewPollLive do
     |> noreply()
   end
 
-  def voting_methods() do
-    %{
-      "Approval" => "approval",
-      "Borda" => "borda",
-      "Borda (Naura)" => "nauru",
-      "Condorcet" => "condorcet",
-      "Majority / Plurality" => "plurality",
-      "Ranked Choice" => "rank_choice",
-      "Schulze" => "schulze",
-      "STAR" => "star",
-    }
-  end
+  def voting_methods(), do: Voting.methods
 end

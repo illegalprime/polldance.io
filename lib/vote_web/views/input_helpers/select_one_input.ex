@@ -2,7 +2,7 @@ defmodule VoteWeb.Views.InputHelpers.SelectOneInput do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
-  def select_one_input(form, field, options, params \\ []) do
+  def select_one_input(form, field, options, _params \\ []) do
     table_opts = [
       id: Form.input_id(form, field),
       class: "select-one-table",
@@ -10,7 +10,7 @@ defmodule VoteWeb.Views.InputHelpers.SelectOneInput do
     content_tag(:table, table_opts) do
       [
         table_header(),
-        table_body(form, field, options, params),
+        table_body(form, field, options),
       ]
     end
   end
@@ -26,17 +26,24 @@ defmodule VoteWeb.Views.InputHelpers.SelectOneInput do
     end
   end
 
-  defp table_body(form, field, options, params) do
+  defp table_body(form, field, options) do
     options
     |> Enum.with_index()
-    |> Enum.map(fn {o, i} -> table_row(form, field, o, i, params) end)
+    |> Enum.concat([{"none of these", -1}])
+    |> Enum.map(fn {o, i} ->
+      table_row(form, field, o, i)
+    end)
   end
 
-  defp table_row(form, field, opt, opt_idx, _params) do
+  defp table_row(form, field, opt, opt_idx) do
     id = Form.input_id(form, field)
     name = Form.input_name(form, field)
     value = Form.input_value(form, field)
-    checked = value[Integer.to_string(opt_idx)]
+    checked =
+      case {value, Integer.to_string(opt_idx)} do
+        {map, "-1"} when map == %{} -> true
+        {value, id} -> value[id]
+      end
 
     input_opts = [
       id: "#{id}_#{opt_idx}",

@@ -4,6 +4,7 @@ defmodule VoteWeb.BallotLive do
   alias Vote.Ballots
   alias Vote.Ballots.LiveState
   alias Vote.Ballots.ResponseSet
+  alias Vote.Voting
   alias Vote.Token
 
   @impl true
@@ -12,10 +13,12 @@ defmodule VoteWeb.BallotLive do
       {:ok, user} = VoteWeb.Authentication.load_user(session)
       LiveState.register(id)
       PubSub.subscribe(Vote.PubSub, "ballot/#{id}/update")
+      ballot = Ballots.by_id(id)
 
       socket
-      |> assign(ballot: Ballots.by_id(id))
+      |> assign(ballot: ballot)
       |> assign(user: user)
+      |> assign(page_title: ballot.title)
       |> update_cs(%{})
       |> ok()
     else
@@ -24,6 +27,14 @@ defmodule VoteWeb.BallotLive do
       |> redirect(to: Routes.homepage_path(socket, :index))
       |> ok()
     end
+  end
+
+  @impl true
+  def handle_event("vote", %{"response_set" => params}, socket) do
+    socket
+    |> update_cs(params)
+    |> save_cs()
+    |> noreply()
   end
 
   @impl true
@@ -41,14 +52,6 @@ defmodule VoteWeb.BallotLive do
   def handle_info({:update_item, _item_id}, socket) do
     socket
     |> assign(ballot: Ballots.by_id(socket.assigns.ballot.id))
-    |> noreply()
-  end
-
-  @impl true
-  def handle_event("vote", %{"response_set" => params}, socket) do
-    socket
-    |> update_cs(params)
-    |> save_cs()
     |> noreply()
   end
 
@@ -77,17 +80,6 @@ defmodule VoteWeb.BallotLive do
   end
 
   def voting_input(method, form, field, options, opts) do
-    fns = %{
-      "plurality"   => {&select_one_input/4, []},
-      "approval"    => {&approval_input/4, []},
-      "star"        => {&rating_input/4, [n: 5]},
-      "rank_choice" => {&ranking_input/4, []},
-      "borda"       => {&ranking_input/4, []},
-      "nauru"       => {&ranking_input/4, []},
-      "schulze"     => {&ranking_input/4, []},
-      "condorcet"   => {&ranking_input/4, []},
-    }
-    {input, base_opts} = fns[method]
-    input.(form, field, options, base_opts ++ opts)
+    Voting.input(method, form, field, options, opts)
   end
 end

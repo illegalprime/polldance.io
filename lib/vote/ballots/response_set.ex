@@ -39,6 +39,7 @@ defmodule Vote.Ballots.ResponseSet do
       where: r.ballot_id == ^ballot_id
 
     Repo.all(query)
+    |> Repo.preload(:account)
   end
 
   def save(cs) do
@@ -85,6 +86,9 @@ defmodule Vote.Ballots.ResponseSet do
     |> Enum.map(fn {k, v} -> {k, to_int(v)} end)
     |> Map.new()
     |> (fn r -> %{ params | "response" => r } end).()
+  end
+  def convert_responses(%{"response" => "-1"} = params) do
+    %{ params | "response" => %{} }
   end
   def convert_responses(%{"response" => item} = params) when is_binary(item) do
     %{ params | "response" => %{item => 1} }

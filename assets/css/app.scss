@@ -3,6 +3,10 @@
 @import "../node_modules/nprogress/nprogress.css";
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fascinate&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 body {
     font-family: 'Oxygen', sans-serif !important;
@@ -104,7 +108,11 @@ header {
     .logo-container {
         h1 {
             margin: 0;
-            font-family: 'Oswald', sans-serif;
+            // font-family: 'Patrick Hand', cursive;
+            // font-family: 'Oswald', sans-serif;
+            // font-family: 'Fascinate', cursive;
+            // font-family: 'Lobster', cursive;
+            font-family: 'Pacifico', cursive;
         }
         margin: 2rem 0rem 1rem 0rem;
     }
@@ -232,7 +240,8 @@ table.rank-table {
             input {
                 display: none;
             }
-
+            label:last-child:before {
+            }
             label {
                 padding: 0 0.3rem;
                 margin: 0;
@@ -291,6 +300,10 @@ table.select-one-table {
     td.opt-select-one-header, td.opt-select-one {
         text-align: center;
     }
+    tbody tr:last-child td.opt-name {
+        font-style: italic;
+        opacity: 0.6;
+    }
 }
 
 .ml1 {
@@ -319,4 +332,8 @@ table.select-one-table {
 
 .fl-baseline {
     align-items: baseline;
+}
+
+.w100 {
+    width: 100%;
 }
