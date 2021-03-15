@@ -6,8 +6,8 @@ defmodule VoteWeb.Authentication.ErrorHandler do
 
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, error, _opts) do
-    Logger.warn("#{inspect(error)}")
     conn
+    |> put_session(:login_redirect, current_path(conn))
     |> put_flash(:error, "Authentication Error.")
     |> redirect(to: Routes.homepage_path(conn, :index))
   end

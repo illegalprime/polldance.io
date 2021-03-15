@@ -11,9 +11,16 @@ defmodule VoteWeb.AuthController do
   def login(conn, %{"account" => %{"email" => email, "password" => pass}}) do
     case email |> Accounts.by_email() |> Authentication.authenticate(pass) do
       {:ok, account} ->
+        redirect =
+          case get_session(conn, :login_redirect) do
+            nil -> Routes.homepage_path(conn, :index)
+            val -> val
+          end
+
         conn
+        |> put_session(:login_redirect, nil)
         |> Authentication.log_in(account)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: redirect)
 
       {:error, :not_verified} ->
         conn
