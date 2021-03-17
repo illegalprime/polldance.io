@@ -2,9 +2,23 @@
   <%= form_for @cs, "#", [phx_submit: :vote, phx_change: :vote], fn f -> %>
     <div class="row">
       <h1 class="<%= if @ballot.desc do "" else "mb0" end %>">
-        <%= @ballot.title %>
+        <%= if @ballot.draft do %>
+          <span style="opacity:0.7;">Draft Preview for</span>
+          <i><%= @ballot.title %></i>
+        <% else %>
+          <%= @ballot.title %>
+        <% end %>
       </h1>
     </div>
+    <%= if @ballot.draft do %>
+      <div class="row">
+        <blockquote style="color:darkred;font-weight:bold;">
+          NOTE: this is a draft, no votes here will be counted!
+          <br/>
+          Publish this ballot by clicking 'Publish Ballot' at the bottom.
+        </blockquote>
+      </div>
+    <% end %>
     <%= if @ballot.desc do %>
       <div class="row">
         <div class="ballot-desc">
@@ -33,7 +47,7 @@
         <% opts = [item_idx: idx] %>
         <%= voting_input(item.voting_method, p, :response, item.options, opts) %>
       </div>
-      <%= if item.appendable do %>
+      <%= if item.appendable and !@ballot.draft do %>
         <div class="row mb0"
              id="add_option_<%= idx %>"
              phx-hook="AppendToItem"
@@ -50,11 +64,25 @@
     <hr/>
     <% res = Routes.results_url(@socket, :index, @ballot.slug) %>
     <div class="row fl-baseline">
-      <a href="<%= res %>" class="mr1 button">view results</a>
-      <p><i>
-        (your vote is saved automatically)
-      </i></p>
+      <%= if @ballot.draft do %>
+        <%= if @ballot.account_id == @user.id do %>
+          <div class="row">
+            <a class="column button button-outline mr1"
+               href="<%= Routes.new_poll_url(@socket, :edit, @ballot.slug) %>"
+            >back to editing</a>
+            <a phx-click="publish_ballot" class="column button">publish ballot</a>
+            <div class="column"></div>
+            <div class="column"></div>
+          </div>
+        <% else %>
+          <p><i>Only the ballot's author can publish ballots.</i></p>
+        <% end %>
+      <% else %>
+        <a href="<%= res %>" class="mr1 button">view results</a>
+        <p><i>
+          (your vote is saved automatically)
+        </i></p>
+      <% end %>
     </div>
   <% end %>
-  <br/><br/><br/><br/><br/><br/><br/>
 </div>

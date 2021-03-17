@@ -49,6 +49,7 @@ defmodule Vote.Ballots.BallotItem do
     size? && !dup?
   end
 
+  defp put_options(cs, nil), do: cs
   defp put_options(cs, options) do
     # remove any leading empty options (based on array_input implementation)
     options = options

@@ -6,8 +6,9 @@ defmodule Vote.Ballots.Ballot do
     field :title, :string
     field :desc, :string
     field :slug, :string
+    field :draft, :boolean, default: true
     field :public, :boolean, default: true
-    has_many :ballot_items, Vote.Ballots.BallotItem
+    has_many :ballot_items, Vote.Ballots.BallotItem, on_replace: :delete
     belongs_to :account, Vote.Accounts.Account
 
     timestamps()

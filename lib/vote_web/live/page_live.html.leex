@@ -4,10 +4,10 @@
     <table>
       <tr>
         <th class="w100">Title</th>
-        <th>Vote</th>
-        <th>Results</th>
+        <th></th>
+        <th></th>
       </tr>
-      <%= for ballot <- @voted_ballots do %>
+      <%= for ballot <- Enum.reject(@voted_ballots, &(&1.draft)) do %>
         <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
         <% results = Routes.results_url(@socket, :index, ballot.slug) %>
         <tr>
@@ -30,10 +30,11 @@
     <table>
       <tr>
         <th class="w100">Title</th>
-        <th>Vote</th>
-        <th>Results</th>
+        <th></th>
+        <th></th>
       </tr>
       <%= for ballot <- @my_ballots do %>
+        <% edit = Routes.new_poll_url(@socket, :edit, ballot.slug) %>
         <% vote = Routes.ballot_url(@socket, :index, ballot.slug) %>
         <% results = Routes.results_url(@socket, :index, ballot.slug) %>
         <tr>
@@ -41,10 +42,18 @@
             <%= ballot.title %>
           </td>
           <td>
-            <a href="<%= vote %>">Vote</a>
+            <%= if ballot.draft do %>
+              <a href="<%= edit %>">Edit</a>
+            <% else %>
+              <a href="<%= vote %>">Vote</a>
+            <% end %>
           </td>
           <td>
-            <a href="<%= results %>">Results</a>
+            <%= if ballot.draft do %>
+              <a href="<%= vote %>">Preview</a>
+            <% else %>
+              <a href="<%= results %>">Results</a>
+            <% end %>
           </td>
         </tr>
       <% end %>

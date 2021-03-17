@@ -45,6 +45,7 @@ defmodule VoteWeb.Router do
 
     live "/app", PageLive, :index
     live "/new", NewPollLive, :index
+    live "/edit/:ballot", NewPollLive, :edit
     live "/b/:ballot", BallotLive, :index
     live "/b/:ballot/results", ResultsLive, :index
   end

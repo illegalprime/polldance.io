@@ -42,13 +42,15 @@ defmodule Vote.Ballots.ResponseSet do
   end
 
   def save(cs) do
-    cs
-    |> get_change(:responses)
-    |> Enum.with_index()
-    |> Enum.reduce(Multi.new(), fn {response, i}, multi ->
-      Multi.insert_or_update(multi, Integer.to_string(i), response)
-    end)
-    |> Repo.transaction()
+    responses = get_change(cs, :responses)
+    if not is_nil(responses) do
+      responses
+      |> Enum.with_index()
+      |> Enum.reduce(Multi.new(), fn {response, i}, multi ->
+        Multi.insert_or_update(multi, Integer.to_string(i), response)
+      end)
+      |> Repo.transaction()
+    end
   end
 
   def changeset(response_set, attrs, ballot, account) do

@@ -1,6 +1,5 @@
 defmodule VoteWeb.Views.InputHelpers.ArrayInput do
   use Phoenix.HTML
-  require Logger
   alias Phoenix.HTML.Form
 
   def array_input(form, field, input_opts, rm_opts, _add_opts) do

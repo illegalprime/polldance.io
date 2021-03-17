@@ -22,7 +22,7 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def mount(%{"ballot" => slug}, session, socket) do
+  def mount(%{"ballot" => slug} = params, session, socket) do
     {:ok, user} = VoteWeb.Authentication.load_user(session)
     socket
     |> assign(user: user)
@@ -36,6 +36,19 @@ defmodule VoteWeb.BallotLive do
     |> update_cs(params)
     |> save_cs()
     |> noreply()
+  end
+
+  @impl true
+  def handle_event("publish_ballot", _params, socket) do
+    if socket.assigns.user.id == socket.assigns.ballot.account_id do
+      {:ok, ballot} = Ballots.publish(socket.assigns.ballot)
+      socket
+      |> put_flash(:info, "Ballot published successfully!")
+      |> redirect(to: Routes.ballot_path(socket, :index, ballot.slug))
+      |> noreply()
+    else
+      noreply(socket)
+    end
   end
 
   @impl true
@@ -68,9 +81,11 @@ defmodule VoteWeb.BallotLive do
   end
 
   def save_cs(socket) do
-    ResponseSet.save(socket.assigns.cs)
-    id = socket.assigns.ballot.id
-    PubSub.broadcast(Vote.PubSub, "ballot/#{id}/vote", :ballot_vote)
+    if !socket.assigns.ballot.draft do
+      ResponseSet.save(socket.assigns.cs)
+      id = socket.assigns.ballot.id
+      PubSub.broadcast(Vote.PubSub, "ballot/#{id}/vote", :ballot_vote)
+    end
     socket
   end
 

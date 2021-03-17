@@ -1,5 +1,4 @@
 defmodule VoteWeb.Authentication.ErrorHandler do
-  require Logger
   use VoteWeb, :controller
 
   @behaviour Guardian.Plug.ErrorHandler

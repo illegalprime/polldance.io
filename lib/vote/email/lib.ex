@@ -2,7 +2,6 @@ defmodule Vote.Email do
   @moduledoc """
   Handles sending email via Bamboo (SendGrid)
   """
-  require Logger
   import Bamboo.Email
   alias __MODULE__.Mailer
 

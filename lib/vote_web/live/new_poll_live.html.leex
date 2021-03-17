@@ -4,10 +4,10 @@
       phx_submit: :save,
       phx_change: :validate,
   ], fn f -> %>
-    <% quick? = length(Changeset.get_field(@cs, :ballot_items)) == 1 %>
+    <% quick? = length(get_field(@cs, :ballot_items)) == 1 %>
     <h1>
-      <%= if @cs.changes[:title] do %>
-        <%= @cs.changes.title %>
+      <%= if get_field(@cs, :title) do %>
+        <%= get_field(@cs, :title) %>
       <% else %>
         Ballot Title
       <% end %>
@@ -20,8 +20,8 @@
     <%= textarea f, :desc, placeholder: "Ballot Summary Here" %>
     <%= error_tag f, :desc %>
     <blockquote>
-      <%= if @cs.changes[:desc] do %>
-        <%= raw(render_markdown(@cs.changes.desc)) %>
+      <%= if get_field(@cs, :desc) do %>
+        <%= raw(render_markdown(get_field(@cs, :desc))) %>
       <% else %>
         Ballot Summary Here
       <% end %>
@@ -30,12 +30,12 @@
     <%= inputs_for f, :ballot_items, fn p -> %>
       <hr/>
       <div class="ballot-item-container">
-        <% ballot_item = @cs.changes.ballot_items |> Enum.at(p.index) %>
+        <% ballot_item = get_field(@cs, :ballot_items) |> Enum.at(p.index) %>
         <%= if not quick? do %>
           <h2>
             <%= p.index + 1 %>.
-            <%= if ballot_item.changes[:title] do %>
-              <%= ballot_item.changes[:title] %>
+            <%= if data_or_cs(ballot_item, :title) do %>
+              <%= data_or_cs(ballot_item, :title) %>
             <% else %>
               Ballot Item Title
             <% end %>
@@ -54,8 +54,8 @@
           <%= textarea p, :desc, placeholder: "Ballot Item Summary Here" %>
           <%= error_tag p, :desc %>
           <blockquote>
-            <%= if ballot_item.changes[:desc] do %>
-              <%= raw(render_markdown(ballot_item.changes.desc)) %>
+            <%= if data_or_cs(ballot_item, :desc) do %>
+              <%= raw(render_markdown(data_or_cs(ballot_item, :desc))) %>
             <% else %>
               Ballot Item Summary Here
             <% end %>
@@ -92,9 +92,15 @@
 
     <hr/>
 
-    <a phx-click="push_ballot_item" class="button button-outline">
-      Add Ballot Item
-    </a>
-    <%= submit "Publish Ballot" %>
+    <div class="row main-control">
+        <a
+            phx-click="push_ballot_item"
+            class="column button button-outline">
+        Add Ballot Item
+      </a>
+      <%= submit "Save Draft", class: "column" %>
+      <div class="column"></div>
+      <div class="column"></div>
+    </div>
   <% end %>
 </div>

@@ -1,14 +1,47 @@
 defmodule VoteWeb.NewPollLive do
+  import Ecto.Changeset
   use VoteWeb, :live_view
   alias Vote.Ballots
   alias Vote.Voting
-  alias Ecto.Changeset
+
+  # TODO: when someone is redirected to the ballot view after saving
+  # and then wants to edit, they go back in history to the /new page
+  # make it so they instead go back and edit the ballot in /edit/:id
+
+  @impl true
+  def mount(%{"ballot" => slug}, session, socket) do
+    {:ok, user} = VoteWeb.Authentication.load_user(session)
+    ballot = Ballots.by_slug(slug)
+
+    cond do
+      is_nil(ballot) ->
+        socket
+        |> put_flash(:error, "Invalid ballot link.")
+        |> redirect(to: Routes.homepage_path(socket, :index))
+        |> ok()
+
+      ballot.account_id != user.id ->
+        socket
+        |> put_flash(:error, "Only ballot authors can edit their ballot.")
+        |> redirect(to: Routes.homepage_path(socket, :index))
+        |> ok()
+
+      true ->
+        socket
+        |> assign(ballot: ballot)
+        |> update_ballot()
+        |> assign(page_title: "Edit " <> ballot.title)
+        |> assign(account: user)
+        |> ok()
+    end
+  end
 
   @impl true
   def mount(_params, session, socket) do
     {:ok, user} = VoteWeb.Authentication.load_user(session)
     socket
-    |> assign(cs: Ballots.new())
+    |> assign(ballot: nil)
+    |> update_ballot()
     |> assign(page_title: "New Ballot")
     |> assign(account: user)
     |> ok()
@@ -17,13 +50,13 @@ defmodule VoteWeb.NewPollLive do
   @impl true
   def handle_event("validate", %{"ballot" => ballot}, socket) do
     socket
-    |> assign(cs: Ballots.new(ballot))
+    |> update_ballot(ballot)
     |> noreply()
   end
 
   @impl true
-  def handle_event("save", %{"ballot" => ballot}, socket) do
-    case Ballots.save(ballot, socket.assigns.account) do
+  def handle_event("save", %{"ballot" => params}, socket) do
+    case Ballots.save(socket.assigns.ballot, params, socket.assigns.account) do
       {:error, %Ecto.Changeset{} = cs} ->
         socket
         |> assign(cs: cs)
@@ -31,8 +64,8 @@ defmodule VoteWeb.NewPollLive do
 
       {:ok, ballot} ->
         socket
-        |> put_flash(:info, "Published successfully!")
-        |> push_redirect(to: Routes.ballot_url(socket, :index, ballot.slug))
+        |> put_flash(:info, "Draft saved successfully!")
+        |> push_redirect(to: Routes.ballot_path(socket, :index, ballot.slug))
         |> noreply()
     end
   end
@@ -50,12 +83,6 @@ defmodule VoteWeb.NewPollLive do
     |> noreply()
   end
 
-  def handle_event("push_option", %{"idx" => idx}, socket) do
-    socket
-    |> assign(cs: Ballots.push_option(socket.assigns.cs, String.to_integer(idx)))
-    |> noreply()
-  end
-
   def handle_event("delete_option", %{"idx" => idx, "item" => item}, socket) do
     idx = String.to_integer(idx)
     item = String.to_integer(item)
@@ -64,6 +91,13 @@ defmodule VoteWeb.NewPollLive do
     |> assign(cs: Ballots.delete_option(socket.assigns.cs, item, idx))
     |> noreply()
   end
+
+  def update_ballot(socket, params \\ %{}) do
+    assign(socket, cs: Ballots.new(socket.assigns.ballot, params))
+  end
+
+  def data_or_cs(%Ecto.Changeset{} = cs, key), do: get_field(cs, key)
+  def data_or_cs(data, key), do: Map.get(data, key)
 
   def voting_methods(), do: Voting.methods
 end

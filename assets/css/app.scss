@@ -1,11 +1,7 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
-@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fascinate&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 body {
@@ -190,6 +186,20 @@ ol.input_container {
             }
         }
     }
+    .new-ballot-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    padding: 0;
+    div.main-control {
+        margin: 0;
+        width: 100%;
+        a, button {
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+    }
 }
 
 table.drag-table {
@@ -320,6 +330,11 @@ table.select-one-table {
 
 .mb0 {
     margin-bottom: 0rem;
+}
+
+.m-around {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .ta-center {
