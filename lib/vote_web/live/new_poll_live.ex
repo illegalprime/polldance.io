@@ -1,6 +1,7 @@
 defmodule VoteWeb.NewPollLive do
   import Ecto.Changeset
   use VoteWeb, :live_view
+  alias Phoenix.PubSub
   alias Vote.Ballots
   alias Vote.Voting
 
@@ -27,6 +28,8 @@ defmodule VoteWeb.NewPollLive do
         |> ok()
 
       true ->
+        PubSub.subscribe(Vote.PubSub, "ballot/#{ballot.id}/update")
+
         socket
         |> assign(ballot: ballot)
         |> update_ballot()
@@ -45,6 +48,21 @@ defmodule VoteWeb.NewPollLive do
     |> assign(page_title: "New Ballot")
     |> assign(account: user)
     |> ok()
+  end
+
+  @impl true
+  def handle_info(:ballot_updated, socket) do
+    socket
+    |> update_ballot()
+    |> noreply()
+  end
+
+  @impl true
+  def handle_info(:ballot_deleted, socket) do
+    socket
+    |> put_flash(:error, "Ballot was deleted.")
+    |> redirect(to: Routes.homepage_path(socket, :index))
+    |> noreply()
   end
 
   @impl true

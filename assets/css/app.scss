@@ -316,6 +316,47 @@ table.select-one-table {
     }
 }
 
+.modal-container {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal-content {
+        background-color: #fefefe;
+        padding: 1rem;
+        border-radius: 5px;
+        position: relative;
+        z-index: 1010;
+
+        .btn-close {
+            color: #aaaaaa;
+            font-size: 30px;
+            text-decoration: none;
+            padding-right:7px;
+            position: absolute;
+            right: 7px;
+            top: 0;
+        }
+
+        .modal-header {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            margin-right: 3rem;
+        }
+
+        .modal-controls a {
+            margin-right: 1rem;
+        }
+    }
+}
+
 .ml1 {
     margin-left: 1rem;
 }

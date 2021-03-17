@@ -63,9 +63,17 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def handle_info({:update_item, _item_id}, socket) do
+  def handle_info(:ballot_updated, socket) do
     socket
     |> assign(ballot: Ballots.by_slug(socket.assigns.ballot.slug))
+    |> noreply()
+  end
+
+  @impl true
+  def handle_info(:ballot_deleted, socket) do
+    socket
+    |> put_flash(:error, "Ballot was deleted.")
+    |> redirect(to: Routes.homepage_path(socket, :index))
     |> noreply()
   end
 

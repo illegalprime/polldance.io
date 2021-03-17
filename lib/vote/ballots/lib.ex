@@ -113,4 +113,10 @@ defmodule Vote.Ballots do
     end)
     put_assoc(cs, :ballot_items, items)
   end
+
+  def delete(ballot) do
+    ballot
+    |> Repo.preload([:ballot_items])
+    |> Repo.delete()
+  end
 end
