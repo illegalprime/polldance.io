@@ -7,11 +7,12 @@ defmodule Vote.Voting do
   alias Vote.Voting.Approval
   alias Vote.Voting.RankedChoice
   alias Vote.Voting.Star
+  alias Vote.Voting.Borda
 
   def methods() do
     %{
       "Approval" => "approval",
-      # "Borda" => "borda",
+      "Borda" => "borda",
       # "Borda (Naura)" => "nauru",
       # "Condorcet" => "condorcet",
       "Majority / Plurality" => "plurality",
@@ -49,7 +50,7 @@ defmodule Vote.Voting do
       "approval"    => &Approval.tally/2,
       "star"        => &Star.tally/2,
       "rank_choice" => &RankedChoice.tally/2,
-      # "borda"       => &Approval.tally/2,
+      "borda"       => &Borda.tally/2,
       # "nauru"       => &Approval.tally/2,
       # "schulze"     => &Approval.tally/2,
       # "condorcet"   => &Approval.tally/2,
@@ -64,6 +65,7 @@ defmodule Vote.Voting do
       "approval"    => &Approval.render/1,
       "star"        => &Star.render/1,
       "rank_choice" => &RankedChoice.render/1,
+      "borda"       => &Borda.render/1,
     }
     fns[method].(vote) |> idxs_to_opts(options)
   end
