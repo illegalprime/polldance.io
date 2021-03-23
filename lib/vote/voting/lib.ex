@@ -75,12 +75,15 @@ defmodule Vote.Voting do
     |> Enum.map(fn {k, _} -> k end)
   end
 
-  def winner_is_first([], _), do: {[], []}
-  def winner_is_first([{_, floor} | _] = results, floor) do
+  def winner_is_first(results, floor) do
+    winner_is_first(results, floor, fn id -> id end)
+  end
+  def winner_is_first([], _, _), do: {[], []}
+  def winner_is_first([{_, floor} | _] = results, floor, _) do
     {[], results}
   end
-  def winner_is_first([{_, score} | _] = results, _floor) do
-    {Enum.take_while(results, fn {_, s} -> s == score end), results}
+  def winner_is_first([{_, score} | _] = results, _floor, f) do
+    {Enum.take_while(results, fn {_, s} -> f.(s) == f.(score) end), results}
   end
 
   def idxs_to_opts(results, options) do

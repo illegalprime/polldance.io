@@ -33,22 +33,41 @@
   <% end %>
 
   <%= if not Enum.empty?(results) do %>
+    <div class="vote-results-container" style="overflow-x:auto;">
     <table>
       <thead>
         <th class="ta-center">Rank</th>
         <th class="w100">Response</th>
-        <th class="ta-center">Score</th>
+        <% n_rounds = max_rounds(results) %>
+        <%= if n_rounds == 1 do %>
+          <th class="ta-center">Score</th>
+        <% else %>
+          <%= for n <- 1..n_rounds do %>
+            <th class="ta-center">R<%= n %></th>
+          <% end %>
+        <% end %>
       </thead>
       <tbody>
         <%= for {opt, score, rank} <- add_ranks(results) do %>
           <tr>
             <td class="ta-center"><%= rank %></td>
             <td class="w100"><code><%= opt %></code></td>
-            <td class="ta-center"><%= score %></td>
+            <%= if is_nil(score) do %>
+              <td class="ta-center">&mdash;</td>
+            <%= end %>
+            <%= if is_number(score) do %>
+              <td class="ta-center"><%= score %></td>
+            <% end %>
+            <%= if is_list(score) do %>
+              <%= for round <- score do %>
+                <td class="ta-center"><%= round %></td>
+              <% end %>
+            <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
+    </div>
   <% end %>
 <% end %>
 

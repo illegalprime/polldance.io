@@ -17,7 +17,7 @@
     <%= error_tag f, :title %>
 
     <%= label f, :desc, "Description" %>
-    <%= textarea f, :desc, placeholder: "Ballot Summary Here" %>
+    <%= textarea f, :desc, placeholder: "Ballot Summary Here (markdown supported)" %>
     <%= error_tag f, :desc %>
     <blockquote>
       <%= if get_field(@cs, :desc) do %>
@@ -51,7 +51,7 @@
           <%= error_tag p, :title %>
 
           <%= label p, :desc, "Description" %>
-          <%= textarea p, :desc, placeholder: "Ballot Item Summary Here" %>
+          <%= textarea p, :desc, placeholder: "Ballot Item Summary Here (markdown supported)" %>
           <%= error_tag p, :desc %>
           <blockquote>
             <%= if data_or_cs(ballot_item, :desc) do %>

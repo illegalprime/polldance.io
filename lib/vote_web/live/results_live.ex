@@ -90,4 +90,15 @@ defmodule VoteWeb.ResultsLive do
   def render_vote(method, response, options) do
     Voting.render(method, response, options)
   end
+
+  def max_rounds(results) do
+    results
+    |> Enum.map(fn {opt, score} ->
+      case score do
+        [_ | _] -> length(score)
+        _ -> 1
+      end
+    end)
+    |> Enum.max()
+  end
 end

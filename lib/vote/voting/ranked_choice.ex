@@ -6,10 +6,9 @@ defmodule Vote.Voting.RankedChoice do
     votes
     |> Enum.map(&Voting.rank_order/1)
     |> do_rounds(target, [])
-    |> List.last()
-    |> Voting.add_missing_opts(options, 0)
-    |> Enum.sort_by(fn {_, v} -> -v end)
-    |> Voting.winner_is_first(0)
+    |> combine_rounds(options)
+    |> Enum.sort_by(fn {_, rounds} -> -(List.last(rounds) || 0) end)
+    |> Voting.winner_is_first([0], &List.last/1)
   end
 
   def do_rounds(votes, n, rounds) do
@@ -30,6 +29,15 @@ defmodule Vote.Voting.RankedChoice do
           |> do_rounds(n, rounds)
       end
     end
+  end
+
+  def combine_rounds(rounds, options) do
+    Enum.reduce(rounds, %{}, fn round, combined ->
+      Enum.reduce(options, combined, fn opt, acc ->
+        score = Map.get(round, opt, 0)
+        Map.update(acc, opt, [score], fn scores -> scores ++ [score] end)
+      end)
+    end)
   end
 
   def prune(to_remove, votes) do
