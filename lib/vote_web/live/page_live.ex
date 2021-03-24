@@ -16,6 +16,7 @@ defmodule VoteWeb.PageLive do
     |> ok()
   end
 
+  @impl true
   def handle_event("delete_modal", %{"idx" => idx}, socket) do
     params = %{
       title: "Delete Ballot?",
@@ -28,12 +29,14 @@ defmodule VoteWeb.PageLive do
     |> noreply()
   end
 
+  @impl true
   def handle_event("close_modal", _params, socket) do
     socket
     |> assign(modal: nil)
     |> noreply()
   end
 
+  @impl true
   def handle_event("delete", %{"data" => idx}, socket) do
     {:ok, ballot} = socket.assigns.my_ballots
     |> Enum.at(String.to_integer(idx))

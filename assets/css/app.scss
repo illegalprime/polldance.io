@@ -251,6 +251,13 @@ table.rank-table {
                 display: none;
             }
             label:last-child:before {
+                content: "×";
+                margin-right: 0.7rem;
+                font-size: 3rem;
+                color: rgba(0, 0, 0, 0.4);
+            }
+            label:last-child {
+                margin-top: -4px;
             }
             label {
                 padding: 0 0.3rem;

@@ -22,7 +22,7 @@ defmodule VoteWeb.BallotLive do
   end
 
   @impl true
-  def mount(%{"ballot" => slug} = params, session, socket) do
+  def mount(%{"ballot" => slug}, session, socket) do
     {:ok, user} = VoteWeb.Authentication.load_user(session)
     socket
     |> assign(user: user)

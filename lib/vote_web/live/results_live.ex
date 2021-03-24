@@ -93,7 +93,7 @@ defmodule VoteWeb.ResultsLive do
 
   def max_rounds(results) do
     results
-    |> Enum.map(fn {opt, score} ->
+    |> Enum.map(fn {_opt, score} ->
       case score do
         [_ | _] -> length(score)
         _ -> 1

@@ -3,11 +3,9 @@ defmodule Vote.Token do
   Handles creating and validating tokens.
   """
   alias Vote.Accounts.Account
-  alias Vote.Ballots.Ballot
   alias VoteWeb.Endpoint
 
   @account_verify_salt "bb8fa5ae-7d05-11eb-b555-ab1859c019ff"
-  @ballot_salt "ef7f4ab1-bbf3-485e-851f-f913c9cb0d89"
 
   def generate_new_account_token(%Account{id: id}) do
     Phoenix.Token.sign(Endpoint, @account_verify_salt, id)
