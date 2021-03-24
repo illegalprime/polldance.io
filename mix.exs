@@ -57,6 +57,7 @@ defmodule Vote.MixProject do
       {:earmark, "~> 1.4"},
       {:phoenix_html_sanitizer, "~> 1.1"},
       {:nanoid, "~> 2.0"},
+      {:ratio, "~> 2.4"},
     ]
   end
 

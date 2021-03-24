@@ -63,6 +63,12 @@
                 <td class="ta-center"><%= round %></td>
               <% end %>
             <% end %>
+            <%= if Ratio.is_rational?(score) do %>
+              <td class="ta-center">
+                <sup><%= Ratio.numerator(score) %></sup> ⁄
+                <sub><%= Ratio.denominator(score) %></sub>
+              </td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>
