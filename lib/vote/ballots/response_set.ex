@@ -12,9 +12,18 @@ defmodule Vote.Ballots.ResponseSet do
     embeds_many :responses, Vote.Ballots.Responses
   end
 
-  def find(account_id, ballot_id) do
+  def find(account_id, ballot_id) when is_integer(account_id) do
     query = from r in Vote.Ballots.Responses,
       where: r.ballot_id == ^ballot_id and r.account_id == ^account_id
+
+    %ResponseSet{
+      responses: Repo.all(query),
+    }
+  end
+
+  def find(public_user, ballot_id) when is_binary(public_user) do
+    query = from r in Vote.Ballots.Responses,
+      where: r.ballot_id == ^ballot_id and r.public_user == ^public_user
 
     %ResponseSet{
       responses: Repo.all(query),
@@ -61,7 +70,7 @@ defmodule Vote.Ballots.ResponseSet do
 
       response_set.responses
       |> Enum.find(%Responses{}, &(&1.ballot_item_id == bitem.id))
-      |> Responses.changeset(params, account.id, ballot.id, bitem)
+      |> Responses.changeset(params, account, ballot.id, bitem)
     end)
 
     response_set

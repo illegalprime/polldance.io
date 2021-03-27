@@ -21,10 +21,26 @@ defmodule VoteWeb.ResultsLive do
   end
 
   @impl true
-  def mount(%{"ballot" => slug}, _session, socket) do
-    socket
-    |> load_ballot(Ballots.by_slug(slug))
-    |> ok()
+  def mount(%{"ballot" => slug}, session, socket) do
+    ballot = Ballots.by_slug(slug)
+    account = VoteWeb.Authentication.load_user(session)
+
+    case {account, ballot} do
+      {{:ok, user}, _} ->
+        socket
+        |> load_ballot(ballot)
+        |> ok()
+      {{:error, _}, %Ballots.Ballot{public: true}} ->
+        socket
+        |> load_ballot(ballot)
+        |> ok()
+      {{:error, _}, _} ->
+        curr_path = Routes.results_path(socket, :index, slug)
+        socket
+        |> put_flash(:error, "Authentication Error.")
+        |> redirect(to: Routes.homepage_path(socket, :index, cb: curr_path))
+        |> ok()
+    end
   end
 
   @impl true

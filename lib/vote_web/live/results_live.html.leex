@@ -65,8 +65,10 @@
             <% end %>
             <%= if Ratio.is_rational?(score) do %>
               <td class="ta-center">
-                <sup><%= Ratio.numerator(score) %></sup> ⁄
-                <sub><%= Ratio.denominator(score) %></sub>
+                <nobr>
+                  <sup><%= Ratio.numerator(score) %></sup> ⁄
+                  <sub><%= Ratio.denominator(score) %></sub>
+                </nobr>
               </td>
             <% end %>
           </tr>
@@ -95,7 +97,16 @@
           <% data = render_vote(
               item.voting_method, response.response, item.options) %>
           <tr>
-            <td><%= response.account.email %></td>
+            <td>
+              <%= if response.account do %>
+                <%= response.account.email %>
+              <% else %>
+                <i><%= response.public_user %></i>
+                <span style="opacity:0.5;">
+                  (not logged in)
+                </span>
+              <% end %>
+            </td>
             <td>
               <%= for {opt, score} <- data do %>
                 <%= if score do %>

@@ -30,6 +30,7 @@ defmodule VoteWeb.Authentication do
       _ -> {:error, :not_authorized}
     end
   end
+  def load_user(no_token), do: {:error, :not_authorized}
 
   def authenticate(%Account{verified: false}, _) do
     {:error, :not_verified}

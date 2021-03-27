@@ -27,8 +27,20 @@
       <% end %>
     </blockquote>
 
+    <div class="inline">
+      <%= label f, :public, "Require login to vote?" %>
+      <%= select f, :public, ["Yes": false, "No": true] %>
+    </div>
+    <%= if get_field(@cs, :public) do %>
+      <blockquote style="color:darkred;font-weight:bold;">
+        <i>We cannot protect against voter impersonator if no login is required.</i>
+      </blockquote>
+    <% end %>
+
     <%= inputs_for f, :ballot_items, fn p -> %>
+      <%= if not quick? do %>
       <hr/>
+      <% end %>
       <div class="ballot-item-container">
         <% ballot_item = get_field(@cs, :ballot_items) |> Enum.at(p.index) %>
         <%= if not quick? do %>
@@ -67,7 +79,7 @@
           <%= select p, :voting_method, Map.to_list(voting_methods()) %>
         </div>
         <div class="ballot-item-settings">
-          <%= label p, :appendable, "Allow others to add options:" %>
+          <%= label p, :appendable, "Allow others to add options?" %>
           <%= select p, :appendable, ["Yes": true, "No": false] %>
         </div>
 

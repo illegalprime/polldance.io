@@ -13,12 +13,14 @@ defmodule VoteWeb.HomepageController do
 
   @account_cs Account.unverified_changeset(%Account{}, %{})
 
-  def index(conn, _params) do
+  def index(conn, params) do
     if conn.assigns[:account] do
       redirect(conn, to: Routes.page_path(conn, :index))
     else
       splash = Routes.static_path(conn, Enum.random(@memes))
-      render(conn, :index,
+      conn
+      |> put_login_redir(params)
+      |> render(:index,
         splash: splash,
         page_title: "Login",
         login: Routes.auth_path(conn, :login),
@@ -28,4 +30,9 @@ defmodule VoteWeb.HomepageController do
       )
     end
   end
+
+  def put_login_redir(conn, %{"cb" => path}) do
+    put_session(conn, :login_redirect, path)
+  end
+  def put_login_redir(conn, _params), do: conn
 end

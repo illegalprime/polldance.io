@@ -1,0 +1,20 @@
+<h2>Pick a Name to Vote With</h2>
+
+<%= form_for @cs, Routes.public_user_path(@conn, :assign, @slug), [
+    as: :pick_user
+], fn f -> %>
+  <%= label f, :name, "Name" %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= submit "Go!", class: "button button-primary" %>
+<% end %>
+
+<blockquote>
+  <b>
+    Don't want to go through this process every time?
+    <a href="<%= Routes.homepage_path(@conn, :index) %>">
+      Make an account or register here.
+    </a>
+  </b>
+</blockquote>

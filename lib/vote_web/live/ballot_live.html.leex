@@ -65,7 +65,7 @@
     <% res = Routes.results_url(@socket, :index, @ballot.slug) %>
     <div class="row fl-baseline">
       <%= if @ballot.draft do %>
-        <%= if @ballot.account_id == @user.id do %>
+        <%= if @ballot.account_id == @user do %>
           <div class="row">
             <a class="column button button-outline mr1"
                href="<%= Routes.new_poll_url(@socket, :edit, @ballot.slug) %>"

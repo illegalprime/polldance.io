@@ -175,9 +175,17 @@ ol.input_container {
     }
 }
 
+.inline {
+    display: flex;
+    align-items: baseline;
+}
+.inline > *:not(:last-child) {
+    margin-right: 1rem;
+}
+
 .new-ballot {
     .ballot-item-container {
-        margin: 0 1rem 0 1rem;
+        // margin: 0 1rem 0 1rem;
         .ballot-item-settings {
             display: flex;
             align-items: baseline;

@@ -23,11 +23,31 @@ defmodule VoteWeb.BallotLive do
 
   @impl true
   def mount(%{"ballot" => slug}, session, socket) do
-    {:ok, user} = VoteWeb.Authentication.load_user(session)
-    socket
-    |> assign(user: user)
-    |> load_ballot(Ballots.by_slug(slug))
-    |> ok()
+    ballot = Ballots.by_slug(slug)
+    account = VoteWeb.Authentication.load_user(session)
+
+    case {account, session, ballot} do
+      {{:ok, user}, _, _} ->
+        socket
+        |> assign(user: user.id)
+        |> load_ballot(ballot)
+        |> ok()
+      {{:error, _}, %{"public_user" => user}, %Ballots.Ballot{public: true}} ->
+        socket
+        |> assign(user: user)
+        |> load_ballot(ballot)
+        |> ok()
+      {{:error, _}, _no_public_user, %Ballots.Ballot{public: true}} ->
+        socket
+        |> redirect(to: Routes.public_user_path(socket, :index, slug))
+        |> ok()
+      {{:error, _}, _, _} ->
+        curr_path = Routes.ballot_path(socket, :index, slug)
+        socket
+        |> put_flash(:error, "Authentication Error.")
+        |> redirect(to: Routes.homepage_path(socket, :index, cb: curr_path))
+        |> ok()
+    end
   end
 
   @impl true
@@ -40,7 +60,7 @@ defmodule VoteWeb.BallotLive do
 
   @impl true
   def handle_event("publish_ballot", _params, socket) do
-    if socket.assigns.user.id == socket.assigns.ballot.account_id do
+    if socket.assigns.user == socket.assigns.ballot.account_id do
       {:ok, ballot} = Ballots.publish(socket.assigns.ballot)
       socket
       |> put_flash(:info, "Ballot published successfully!")
@@ -83,7 +103,7 @@ defmodule VoteWeb.BallotLive do
     # get the current user from the socket
     user = socket.assigns.user
     # get the yet-to-be edited response set
-    response_set = ResponseSet.find(user.id, ballot.id)
+    response_set = ResponseSet.find(user, ballot.id)
     # make a new change set from these
     assign(socket, cs: ResponseSet.changeset(response_set, params, ballot, user))
   end
