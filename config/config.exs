@@ -12,7 +12,7 @@ config :vote,
 
 # Configures the endpoint
 config :vote, VoteWeb.Endpoint,
-  url: [host: "polldance.io", scheme: "https", port: 443],
+  url: [host: "localhost", port: System.get_env("PORT") || 8989],
   secret_key_base: "8S97EM77A/aP/XRU+EFu6z74fb5cGL8H0NCHxZWqLqED+J4nzRjnzpuY3PA4w3lw",
   render_errors: [view: VoteWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Vote.PubSub,
@@ -29,6 +29,27 @@ config :phoenix, :json_library, Jason
 config :vote, VoteWeb.Authentication,
   issuer: "vote",
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.13.12",
+  path: System.get_env("MIX_ESBUILD_PATH"),
+  default: [
+    args:
+    ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" =>
+      System.get_env("NODE_PATH") || Path.expand("../deps", __DIR__)
+    }
+  ]
+
+config :dart_sass,
+  version: "1.49.0",
+  path: System.get_env("MIX_SASS_PATH"),
+  default: [
+    args: ~w(css/app.scss ../priv/static/assets/app.css),
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # configure bamboo
 config :vote, Vote.Email.Mailer,
