@@ -1,0 +1,1 @@
+call "%~dp0\vote" eval Vote.Release.migrate

@@ -30,6 +30,7 @@ npm-debug.log
 
 # files here are generated from assets/
 /priv/static/assets
+/priv/static/cache_manifest.json
 
 /secret
 

@@ -12,7 +12,6 @@ config :vote,
 
 # Configures the endpoint
 config :vote, VoteWeb.Endpoint,
-  url: [host: "localhost", port: System.get_env("PORT") || 8989],
   secret_key_base: "8S97EM77A/aP/XRU+EFu6z74fb5cGL8H0NCHxZWqLqED+J4nzRjnzpuY3PA4w3lw",
   render_errors: [view: VoteWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Vote.PubSub,
@@ -25,10 +24,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-config :vote, VoteWeb.Authentication,
-  issuer: "vote",
-  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -51,11 +46,6 @@ config :dart_sass,
     cd: Path.expand("../assets", __DIR__)
   ]
 
-# configure bamboo
-config :vote, Vote.Email.Mailer,
-  adapter: Bamboo.SendGridAdapter,
-  api_key: {System, :get_env, ["SENDGRID_API_KEY"]}
-
 # configure emails
 config :vote, Vote.Email,
   verify_subject: "Account Verification for VOTE",
@@ -74,11 +64,6 @@ config :ueberauth, Ueberauth,
       ]
     },
   ]
-
-# configure google OAuth
-config :ueberauth, Ueberauth.Strategy.Google.OAuth,
-  client_id: {System, :get_env, ["GOOGLE_CLIENT_ID"]},
-  client_secret: {System, :get_env, ["GOOGLE_CLIENT_SECRET"]}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

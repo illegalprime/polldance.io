@@ -16,6 +16,7 @@ config :vote, Vote.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :vote, VoteWeb.Endpoint,
+  url: [host: "localhost", port: 22205],
   http: [port: 22205],
   debug_errors: true,
   code_reloader: true,
