@@ -4,6 +4,8 @@ import {LiveSocket} from "phoenix_live_view";
 import {DragTable} from "./ranking_input.js";
 import {AppendToItem} from "./append_box.js";
 import topbar from "../vendor/topbar";
+import Sortable from "../vendor/draganddrop.js";
+import jQuery from "../vendor/jquery.js";
 
 const Hooks = {
     DragTable,
@@ -17,8 +19,8 @@ let liveSocket = new LiveSocket("/live", Socket, {
 });
 
 // Show progress bar on live navigation and form submits
-window.addEventListener("phx:page-loading-start", info => NProgress.start());
-window.addEventListener("phx:page-loading-stop", info => NProgress.done());
+window.addEventListener("phx:page-loading-start", info => topbar.show());
+window.addEventListener("phx:page-loading-stop", info => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();
@@ -29,3 +31,10 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 
+
+if (typeof define !== 'undefined') {
+    define(['jquery'], Sortable);
+} else {
+    Sortable(jQuery, Sortable);
+}
+window.jquery_sortable = Sortable;

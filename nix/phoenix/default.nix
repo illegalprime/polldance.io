@@ -1,4 +1,4 @@
-{ callPackage }:
+{ beam, callPackage }:
 
 let
   dart-sass = callPackage ../dart-sass {};
@@ -17,6 +17,6 @@ in
 buildMix {
   pname = "pollparty.io";
   version = "0.5.0";
-  mixSha256 = "1x81bazy1fz1i22n519ildkmmc3hzaprsk38zfq0cmzddifyd8ia";
+  mixSha256 = "0hhav82bgmqkqqmabnbcfzidpqycadwwnc7rm4vw5r24q7wdijs5";
   src = builtins.fetchGit ../..;
 }

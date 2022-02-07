@@ -691,12 +691,4 @@ return {
 
 }
 
-import jQuery from "jquery";
-
-if (typeof define !== 'undefined') {
-    define(['jquery'], factory);
-} else {
-    factory(jQuery, factory);
-}
-
-window.jquery_sortable = jQuery;
+export default Sortable = factory;
