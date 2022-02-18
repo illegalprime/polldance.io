@@ -31,10 +31,5 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 
-
-if (typeof define !== 'undefined') {
-    define(['jquery'], Sortable);
-} else {
-    Sortable(jQuery, Sortable);
-}
-window.jquery_sortable = Sortable;
+Sortable(jQuery);
+window.jquery_sortable = jQuery;
