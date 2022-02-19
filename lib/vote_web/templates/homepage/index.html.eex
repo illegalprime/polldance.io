@@ -1,13 +1,28 @@
 <div class="container">
-  <div class="row splash-container">
-    <img class="splash" src="<%= @splash %>" alt="Anarcho-Bidenist"/>
+  <div class="row">
+      <h1>Create &amp; Share Ranked-Choice Polls!</h1>
+  </div>
+  <div class="row">
+      <p>
+          Create polls to vote on multiple topics, share them with friends,
+          and see the final results <i>update live!</i>
+          <br/>
+          There are <i>many</i> supported voting methods to experiment with:
+      </p>
+  </div>
+  <div class="row">
+      <ul style="margin-bottom:0;">
+          <%= for {method, link} <- voting_methods() do %>
+              <li><a target="_blank" href="<%= link %>"><%= method %></a></li>
+          <% end %>
+      </ul>
   </div>
 
-  <br/>
+  <hr/>
 
   <div class="row auth-forms">
     <div class="column login">
-      <h1>Log In</h1>
+      <h2>Log In</h2>
       <%= form_for @login_cs, @login, [as: :account], fn f -> %>
         <%= label f, :email, "Email Address" %>
         <%= email_input f, :email %>
@@ -27,7 +42,7 @@
           class: "button button-outline") %>
     </div>
     <div class="column">
-      <h1>or Register</h1>
+      <h2>or Register</h2>
       <%= form_for @register_cs, @register, [as: :account], fn f -> %>
         <%= label f, :email, "Email Address" %>
         <%= email_input f, :email %>
@@ -46,11 +61,12 @@
     </div>
   </div>
 
-  <br/>
+  <hr/>
+
   <div class="row" style="flex-direction:column;align-items:center">
-    <h2><i>
-      &ldquo;The <b>most</b> we can do is <b>vote</b> every four years.&rdquo;
-    </i></h2>
+    <h4><i>
+      &ldquo;The <b>most</b> we can do is <b>vote</b>.&rdquo; &ndash; Some Guy
+    </i></h4>
   </div>
   <br/>
 </div>

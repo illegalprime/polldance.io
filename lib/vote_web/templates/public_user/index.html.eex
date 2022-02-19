@@ -14,7 +14,7 @@
   <b>
     Don't want to go through this process every time?
     <a href="<%= Routes.homepage_path(@conn, :index) %>">
-      Make an account or register here.
+      Make an account or login here.
     </a>
   </b>
 </blockquote>

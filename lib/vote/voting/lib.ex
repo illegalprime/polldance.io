@@ -23,6 +23,17 @@ defmodule Vote.Voting do
     }
   end
 
+  def method_links() do
+    %{
+      "Approval" => "https://en.wikipedia.org/wiki/Approval_voting",
+      "Borda" => "https://en.wikipedia.org/wiki/Borda_count",
+      "Borda (Naura)" => "https://en.wikipedia.org/wiki/Borda_count#Dowdall_system_(Nauru)",
+      "Majority / Plurality" => "https://en.wikipedia.org/wiki/Plurality_(voting)",
+      "Ranked Choice" => "https://en.wikipedia.org/wiki/Ranked_voting",
+      "STAR" => "https://en.wikipedia.org/wiki/STAR_voting",
+    }
+  end
+
   def input(method, form, field, options, opts) do
     fns = %{
       "plurality"   => {&SelectOneInput.select_one_input/4, []},

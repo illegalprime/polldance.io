@@ -226,6 +226,7 @@ table.drag-table {
     }
     th.drag-header {
         padding-right: 1.5rem;
+        white-space: nowrap;
     }
     tr.rank-divider td {
         opacity: 0.7;
