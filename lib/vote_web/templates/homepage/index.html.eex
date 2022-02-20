@@ -7,15 +7,24 @@
           Create polls to vote on multiple topics, share them with friends,
           and see the final results <i>update live!</i>
           <br/>
-          There are <i>many</i> supported voting methods to experiment with:
+          Look at all the supported features!
       </p>
   </div>
   <div class="row">
-      <ul style="margin-bottom:0;">
-          <%= for {method, link} <- voting_methods() do %>
-              <li><a target="_blank" href="<%= link %>"><%= method %></a></li>
-          <% end %>
-      </ul>
+      <div class="column">
+          <ul style="margin-bottom:0;">
+              <%= for {method, link} <- voting_methods() do %>
+                  <li><a target="_blank" href="<%= link %>"><%= method %> Voting</a></li>
+              <% end %>
+              <li>Participants can add their own items! (Optional)</li>
+              <li>Participants don't need an account! (Optional)</li>
+              <li>(Coming Soon) Poll Close Times</li>
+          </ul>
+          Check out the <a href="#howto">how-to guide</a> for a preview!
+      </div>
+      <div class="column">
+          <img src="<%= Routes.static_path(@conn, "/images/beach-ball.jpg") %>"/>
+      </div>
   </div>
 
   <hr/>
@@ -59,6 +68,33 @@
         <%= submit "Register", class: "button button-primary" %>
       <% end %>
     </div>
+  </div>
+
+  <hr/>
+
+  <h2 id="howto">Quick How-To</h2>
+  <br/>
+
+  <div class="row">
+      <div class="column">
+          <h3><b>1.</b> Make a Ballot</h3>
+          <img src="<%= Routes.static_path(@conn, "/images/title-poll.gif") %>"/>
+      </div>
+      <div class="column">
+          <h3><b>2.</b> Add Some Options</h3>
+          <img src="<%= Routes.static_path(@conn, "/images/add-options.gif") %>"/>
+      </div>
+  </div>
+  <br/>
+  <div class="row">
+      <div class="column">
+          <h3><b>3.</b> Vote!</h3>
+          <img src="<%= Routes.static_path(@conn, "/images/vote.gif") %>"/>
+      </div>
+      <div class="column">
+          <h3><b>4.</b> Get Live Results</h3>
+          <img src="<%= Routes.static_path(@conn, "/images/results.gif") %>"/>
+      </div>
   </div>
 
   <hr/>

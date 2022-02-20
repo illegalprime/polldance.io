@@ -36,5 +36,6 @@ mkShell {
     export NIX_PATH="nixpkgs=${nixpkgs}:${pwd}/nix/ops"
     export NIXOPS_STATE="${pwd}/secret/localstate.nixops"
     source <(awk '{print "export " $0}' ${pwd}/secret/env)
+    alias  start='iex -S mix phx.server'
   '';
 }
