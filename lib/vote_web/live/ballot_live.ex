@@ -27,6 +27,10 @@ defmodule VoteWeb.BallotLive do
     account = VoteWeb.Authentication.load_user(session)
 
     case {account, session, ballot} do
+      {_, _, %Ballots.Ballot{closed: true}} ->
+        socket
+        |> close_redir(slug)
+        |> ok()
       {{:ok, user}, _, _} ->
         socket
         |> assign(user: user.id)
@@ -97,6 +101,11 @@ defmodule VoteWeb.BallotLive do
     |> noreply()
   end
 
+  @impl true
+  def handle_info(:ballot_closed, socket) do
+    close_redir(socket, socket.assigns.ballot.slug) |> noreply()
+  end
+
   def update_cs(socket, params) do
     # update to new ballot in case it was changed
     ballot = Ballots.by_slug(socket.assigns.ballot.slug)
@@ -109,12 +118,21 @@ defmodule VoteWeb.BallotLive do
   end
 
   def save_cs(socket) do
-    if !socket.assigns.ballot.draft do
-      ResponseSet.save(socket.assigns.cs)
-      id = socket.assigns.ballot.id
-      PubSub.broadcast(Vote.PubSub, "ballot/#{id}/vote", :ballot_vote)
+    ballot = socket.assigns.ballot
+    cond do
+      ballot.draft -> socket
+      ballot.closed -> socket |> close_redir(ballot.slug)
+      true ->
+        ResponseSet.save(socket.assigns.cs)
+        PubSub.broadcast(Vote.PubSub, "ballot/#{ballot.id}/vote", :ballot_vote)
+        socket
     end
+  end
+
+  def close_redir(socket, slug) do
     socket
+    |> put_flash(:info, "Voting has closed.")
+    |> redirect(to: Routes.results_path(socket, :index, slug))
   end
 
   def broadcast_listener(socket, data) do

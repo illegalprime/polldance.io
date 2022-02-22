@@ -16,7 +16,7 @@ let
 in
 buildMix {
   pname = "pollparty.io";
-  version = "0.5.0";
+  version = "0.16.0";
   mixSha256 = "0hhav82bgmqkqqmabnbcfzidpqycadwwnc7rm4vw5r24q7wdijs5";
   src = builtins.fetchGit ../..;
 }

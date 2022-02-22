@@ -30,9 +30,7 @@
     <table>
       <tr>
         <th class="w100">Title</th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th></th> <th></th> <th></th> <th></th> <th></th>
       </tr>
       <%= for {ballot, idx} <- Enum.with_index(@my_ballots) do %>
         <% edit = Routes.new_poll_url(@socket, :edit, ballot.slug) %>
@@ -42,11 +40,23 @@
           <td class="w100">
             <%= ballot.title %>
           </td>
+          <td style="text-align:center;">
+              <%= cond do %>
+              <% ballot.draft -> %> <i>Draft</i>
+              <% ballot.closed -> %> <i>Closed</i>
+              <% true -> %> <i>Open</i>
+              <% end %>
+          </td>
           <td>
-            <%= if ballot.draft do %>
-              <a href="<%= edit %>">Edit</a>
-            <% else %>
-              <a href="<%= vote %>">Vote</a>
+              <%= if not ballot.draft and not ballot.closed do %>
+              <a href="#" phx-click="close_modal" phx-value-idx="<%= idx %>">Close</a>
+              <% end %>
+          </td>
+          <td>
+            <%= cond do %>
+              <% ballot.draft -> %> <a href="<%= edit %>">Edit</a>
+              <% ballot.closed -> %>
+              <% true -> %> <a href="<%= vote %>">Vote</a>
             <% end %>
           </td>
           <td>
@@ -73,7 +83,7 @@
 <%= if assigns[:modal] do %>
   <div class="modal-container">
     <div class="modal-content">
-      <a href="#" phx-click="close_modal"
+      <a href="#" phx-click="hide_modal"
          class="btn-close closemodal">&times;</a>
 
       <div class="modal-header"><h2><%= @modal.title %></h2></div>
@@ -84,12 +94,17 @@
           <br/>
           This <b>cannot</b> be undone.
         <% end %>
+        <%= if @modal.desc == :close do %>
+          This will prevent anyone from casting or changing their votes.
+          <br/>
+          This <b>cannot</b> be undone.
+        <% end %>
       </p>
 
       <div class="row modal-controls">
         <div class="column"></div>
         <div class="column"></div>
-        <a href="#" phx-click="close_modal"
+        <a href="#" phx-click="hide_modal"
            class="column button button-outline">No</a>
         <a href="#" class="column button button"
            phx-click="<%= @modal.ok_click %>"

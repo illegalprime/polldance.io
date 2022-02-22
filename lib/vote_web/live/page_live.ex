@@ -30,7 +30,20 @@ defmodule VoteWeb.PageLive do
   end
 
   @impl true
-  def handle_event("close_modal", _params, socket) do
+  def handle_event("close_modal", %{"idx" => idx}, socket) do
+    params = %{
+      title: "Close Voting?",
+      desc: :close,
+      ok_click: "close",
+      ok_data: idx,
+    }
+    socket
+    |> assign(modal: params)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("hide_modal", _params, socket) do
     socket
     |> assign(modal: nil)
     |> noreply()
@@ -44,6 +57,23 @@ defmodule VoteWeb.PageLive do
 
     topic = "ballot/#{ballot.id}/update"
     PubSub.broadcast(Vote.PubSub, topic, :ballot_deleted)
+
+    socket
+    |> update(socket.assigns.account)
+    |> assign(modal: nil)
+    |> noreply()
+  end
+
+  # TODO: prevent data base inserts for closed ballots
+
+  @impl true
+  def handle_event("close", %{"data" => idx}, socket) do
+    {:ok, ballot} = socket.assigns.my_ballots
+    |> Enum.at(String.to_integer(idx))
+    |> Ballots.close()
+
+    topic = "ballot/#{ballot.id}/update"
+    PubSub.broadcast(Vote.PubSub, topic, :ballot_closed)
 
     socket
     |> update(socket.assigns.account)

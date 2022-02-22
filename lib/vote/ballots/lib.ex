@@ -41,6 +41,12 @@ defmodule Vote.Ballots do
     |> Repo.update()
   end
 
+  def close(ballot) do
+    ballot
+    |> change(closed: true)
+    |> Repo.update()
+  end
+
   def new(from, params \\ %{})
 
   def new(nil, %{"ballot_items" => _} = params) do

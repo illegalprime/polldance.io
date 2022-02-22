@@ -26,7 +26,7 @@ defmodule VoteWeb.ResultsLive do
     account = VoteWeb.Authentication.load_user(session)
 
     case {account, ballot} do
-      {{:ok, user}, _} ->
+      {{:ok, _user}, _} ->
         socket
         |> load_ballot(ballot)
         |> ok()
