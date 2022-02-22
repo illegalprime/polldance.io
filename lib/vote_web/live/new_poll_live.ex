@@ -58,6 +58,15 @@ defmodule VoteWeb.NewPollLive do
   end
 
   @impl true
+  def handle_info(:ballot_closed, socket) do
+    slug = socket.assigns.ballot.slug
+    socket
+    |> put_flash(:error, "Ballot was closed.")
+    |> redirect(to: Routes.results_path(socket, :index, slug))
+    |> noreply()
+  end
+
+  @impl true
   def handle_info(:ballot_deleted, socket) do
     socket
     |> put_flash(:error, "Ballot was deleted.")

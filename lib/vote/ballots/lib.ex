@@ -44,6 +44,7 @@ defmodule Vote.Ballots do
   def close(ballot) do
     ballot
     |> change(closed: true)
+    |> change(live: true)
     |> Repo.update()
   end
 

@@ -28,7 +28,7 @@ defmodule Vote.Ballots.Ballot do
   @doc false
   def changeset(ballot, attrs) do
     ballot
-    |> cast(attrs, [:title, :desc, :public])
+    |> cast(attrs, [:title, :desc, :public, :live])
     |> cast_assoc(:ballot_items, required: true)
     |> validate_required([:title])
     |> unique_constraint(:title)

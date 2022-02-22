@@ -12,13 +12,17 @@
   </div>
   <div class="row">
       <div class="column">
-          <ul style="margin-bottom:0;">
+          <p> Configure these per poll: </p>
+          <ul>
+              <li>Users <b>can</b>/<b>can't</b> add their own options!</li>
+              <li>Users <b>do</b>/<b>don't</b> need an account to vote!</li>
+              <li>Results <b>do</b>/<b>don't</b> update live as votes change!</li>
+          </ul>
+          <p> Pick a way to count your votes: </p>
+          <ul>
               <%= for {method, link} <- voting_methods() do %>
                   <li><a target="_blank" href="<%= link %>"><%= method %> Voting</a></li>
               <% end %>
-              <li>Participants can add their own items! (Optional)</li>
-              <li>Participants don't need an account! (Optional)</li>
-              <li>(Coming Soon) Poll Close Times</li>
           </ul>
           Check out the <a href="#howto">how-to guide</a> for a preview!
       </div>

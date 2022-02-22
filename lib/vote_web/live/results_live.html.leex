@@ -1,5 +1,6 @@
 <h2>Results for <i><%= @ballot.title %></i></h2>
 <% quick? = length(@ballot.ballot_items) == 1 %>
+<%= if @ballot.live do %>
 <%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
   <% responses = @responses[item.id] %>
   <% {winners, results} = tally(item.voting_method, responses, item.options) %>
@@ -127,4 +128,34 @@
       <h3>No responses for <i><%= item.title %></i>.</h3>
     <% end %>
   <% end %>
+<% end %>
+<% else %>
+<blockquote style="color:darkblue;font-weight:bold;">
+  Ballot was configured to hide its results until it's closed,
+  <br/>
+  but the accounts that have voted so far will be displayed.
+</blockquote>
+<%= for {item, idx} <- Enum.with_index(@ballot.ballot_items) do %>
+  <% responses = @responses[item.id] %>
+  <%= if not quick? do %>
+    <h3><%= idx + 1 %>. <%= item.title %></h3>
+  <% end %>
+  <table>
+    <thead> <th>Participants</th> </thead>
+    <tbody>
+      <%= for response <- responses || [] do %>
+        <tr><td>
+          <%= cond do %>
+            <% response.public_user -> %>
+              <i><%= response.public_user %></i>
+              <span style="opacity:0.5;">
+                (not logged in)
+              </span>
+            <% true -> %> <%= response.account.email %>
+          <% end %>
+        </td></tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
 <% end %>

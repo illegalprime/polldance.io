@@ -27,9 +27,20 @@
       <% end %>
     </blockquote>
 
-    <div class="inline">
-      <%= label f, :public, "Require login to vote?" %>
-      <%= select f, :public, ["Yes": false, "No": true] %>
+    <div class="row">
+      
+    <div class="column">
+      <div class="inline">
+        <%= label f, :public, "Require login to vote?" %>
+        <%= select f, :public, ["Yes": false, "No": true] %>
+      </div>
+    </div>
+    <div class="column">
+      <div class="inline">
+        <%= label f, :live, "Hide results until ballot closes?" %>
+        <%= select f, :live, ["No": true, "Yes": false] %>
+      </div>
+    </div>
     </div>
     <%= if get_field(@cs, :public) do %>
       <blockquote style="color:darkred;font-weight:bold;">
@@ -74,13 +85,19 @@
           </blockquote>
         <% end %>
 
-        <div class="ballot-item-settings">
-          <%= label p, :voting_method, "Voting method: " %>
-          <%= select p, :voting_method, Map.to_list(voting_methods()) %>
-        </div>
-        <div class="ballot-item-settings">
-          <%= label p, :appendable, "Allow others to add options?" %>
-          <%= select p, :appendable, ["Yes": true, "No": false] %>
+        <div class="row">
+          <div class="column">
+            <div class="ballot-item-settings">
+              <%= label p, :voting_method, "Voting method: " %>
+              <%= select p, :voting_method, Map.to_list(voting_methods()) %>
+            </div>
+          </div>
+          <div class="column">
+            <div class="ballot-item-settings">
+              <%= label p, :appendable, "Allow others to add options?" %>
+              <%= select p, :appendable, ["Yes": true, "No": false] %>
+            </div>
+          </div>
         </div>
 
         <%= label p, :options %>

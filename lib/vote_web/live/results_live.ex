@@ -58,6 +58,13 @@ defmodule VoteWeb.ResultsLive do
   end
 
   @impl true
+  def handle_info(:ballot_closed, socket) do
+    socket
+    |> update_ballot()
+    |> noreply()
+  end
+
+  @impl true
   def handle_info(:ballot_deleted, socket) do
     socket
     |> put_flash(:error, "Ballot was deleted.")
