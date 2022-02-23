@@ -5,29 +5,31 @@
   <div class="row">
       <p>
           Create polls to vote on multiple topics, share them with friends,
-          and see the final results <i>update live!</i>
+          and watch the results <i>update live!</i>
           <br/>
-          Look at all the supported features!
       </p>
   </div>
   <div class="row">
       <div class="column">
+          <p><b>Look at all these features!</b></p>
           <p> Configure these per poll: </p>
           <ul>
               <li>Users <b>can</b>/<b>can't</b> add their own options!</li>
               <li>Users <b>do</b>/<b>don't</b> need an account to vote!</li>
               <li>Results <b>do</b>/<b>don't</b> update live as votes change!</li>
           </ul>
-          <p> Pick a way to count your votes: </p>
+          <p>&amp; Pick a way to count your votes:</p>
           <ul>
               <%= for {method, link} <- voting_methods() do %>
                   <li><a target="_blank" href="<%= link %>"><%= method %> Voting</a></li>
               <% end %>
           </ul>
           Check out the <a href="#howto">how-to guide</a> for a preview!
+          <br/>
+          <br/>
       </div>
       <div class="column">
-          <img src="<%= Routes.static_path(@conn, "/images/beach-ball.jpg") %>"/>
+          <img src="<%= Routes.static_path(@conn, "/images/splash.jpg") %>"/>
       </div>
   </div>
 
