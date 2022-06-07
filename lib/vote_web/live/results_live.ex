@@ -37,8 +37,8 @@ defmodule VoteWeb.ResultsLive do
       {{:error, _}, _} ->
         curr_path = Routes.results_path(socket, :index, slug)
         socket
-        |> put_flash(:error, "Authentication Error.")
-        |> redirect(to: Routes.homepage_path(socket, :index, cb: curr_path))
+        |> put_flash(:error, "Please log in first! (Authentication Error)")
+        |> redirect(to: Routes.homepage_path(socket, :index, cb: curr_path) <> "#login")
         |> ok()
     end
   end

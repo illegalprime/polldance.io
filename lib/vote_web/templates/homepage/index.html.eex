@@ -33,7 +33,13 @@
       </div>
   </div>
 
-  <hr/>
+  <br/>
+  <hr id="login" />
+  <br/>
+
+  <%= if String.contains?(get_flash(@conn, :error) || "", "Authentication Error") do %>
+    <p class="alert alert-danger" role="alert">Please log in first!</p>
+  <% end %>
 
   <div class="row auth-forms">
     <div class="column login">
@@ -76,7 +82,9 @@
     </div>
   </div>
 
+  <br/>
   <hr/>
+  <br/>
 
   <h2 id="howto">Quick How-To</h2>
   <br/>
@@ -103,7 +111,9 @@
       </div>
   </div>
 
+  <br/>
   <hr/>
+  <br/>
 
   <div class="row" style="flex-direction:column;align-items:center">
     <h4><i>

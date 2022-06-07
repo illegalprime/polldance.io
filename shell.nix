@@ -10,6 +10,8 @@ let
 in
 with pkgs;
 mkShell {
+  name = "pollparty.io";
+
   buildInputs = [
     beam.packages.erlangR24.elixir_1_12
     postgresql_10
