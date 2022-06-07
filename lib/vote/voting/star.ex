@@ -17,11 +17,12 @@ defmodule Vote.Voting.Star do
   def do_runoff([], _), do: {%{}, [], []}
   def do_runoff([{o, _}] = results, _), do: {%{o => 1}, results, []}
   def do_runoff([{_, score} | _] = results, votes) do
-    # get at least two with the highest score for runoff
-    [opts, loser_opts] = results
-    |> Enum.with_index()
-    |> Enum.chunk_by(fn {{_, s}, i} -> i < 2 or s == score end)
-    |> Enum.map(fn l -> Enum.map(l, fn {el, _} -> el end) end)
+    # get any items other than the first two to include in runoff
+    {extra_opts, loser_opts} = results
+    |> Enum.drop(2)
+    |> Enum.split_while(fn {_, s} -> s == score end)
+    # always include the first two items in the runoff
+    opts = Enum.take(results, 2) ++ extra_opts
     # zero each option to prep for counting votes
     ballot = opts |> Enum.map(fn {o, _} -> {o, 0} end) |> Map.new()
     # count number of wins in a head-to-head
