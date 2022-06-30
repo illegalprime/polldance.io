@@ -4,6 +4,7 @@ defmodule Vote.Ballots.Responses do
 
   schema "responses" do
     field :response, :map, default: %{}
+    field :comments, :map, default: %{}
     field :type, :string
     field :public_user, :string, default: nil
 
@@ -19,7 +20,7 @@ defmodule Vote.Ballots.Responses do
   @doc false
   def changeset(responses, attrs, user, ballot_id, ballot_item) do
     responses
-    |> cast(attrs, [:response, :append])
+    |> cast(attrs, [:response, :append, :comments])
     |> put_change(:ballot_id, ballot_id)
     |> put_change(:ballot_item_id, ballot_item.id)
     |> put_change(:type, ballot_item.voting_method)

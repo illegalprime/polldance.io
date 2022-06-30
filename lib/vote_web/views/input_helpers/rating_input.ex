@@ -4,7 +4,6 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
 
   def rating_input(form, field, options, params \\ []) do
     table_opts = [
-      id: Form.input_id(form, field),
       class: "rank-table",
     ]
     content_tag(:table, table_opts) do
@@ -33,9 +32,23 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
   end
 
   defp table_row(form, field, opt, opt_idx, params) do
+    id = Form.input_id(form, :comments)
+    name = Form.input_name(form, :comments)
+    values = Form.input_value(form, :comments) || %{}
+
     content_tag(:tr) do
       [
-        content_tag(:td, opt, class: "opt-name"),
+        content_tag(:td, class: "opt-name") do
+        [
+          content_tag(:p, opt),
+          Form.textarea(form, :na, [
+            name: "#{name}[#{opt_idx}]",
+            id: "#{id}_#{opt_idx}",
+            value: Map.get(values, Integer.to_string(opt_idx), ""),
+            placeholder: "Leave some comments here!",
+          ])
+        ]
+        end,
         content_tag(:td, class: "opt-rating") do
           content_tag(:div, class: "stars-container") do
             make_stars(form, field, opt_idx, params)

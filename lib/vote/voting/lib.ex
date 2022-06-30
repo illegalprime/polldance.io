@@ -80,7 +80,9 @@ defmodule Vote.Voting do
       "borda"       => &Borda.render/1,
       "nauru"       => &Nauru.render/1,
     }
-    fns[method].(vote) |> idxs_to_opts(options)
+    fns[method].(vote) |> Enum.map(fn {i, score} ->
+      {i, Enum.at(options, String.to_integer(i)), score}
+    end)
   end
 
   def rank_order(vote) do
