@@ -4,7 +4,8 @@ defmodule VoteWeb.Views.InputHelpers.RankingInput do
 
   # TODO: what happens when fields are added while a user is dragging?
 
-  def ranking_input(form, field, options, opts \\ []) do
+  def ranking_input(form, field, item, opts \\ []) do
+    options = item.options
     id = Form.input_id(form, field)
     values = Form.input_value(form, field)
 

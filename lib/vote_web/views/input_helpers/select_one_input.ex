@@ -2,7 +2,8 @@ defmodule VoteWeb.Views.InputHelpers.SelectOneInput do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
-  def select_one_input(form, field, options, _params \\ []) do
+  def select_one_input(form, field, item, _params \\ []) do
+    options = item.options
     table_opts = [
       id: Form.input_id(form, field),
       class: "select-one-table",

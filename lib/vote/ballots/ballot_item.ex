@@ -4,6 +4,7 @@ defmodule Vote.Ballots.BallotItem do
 
   schema "ballot_items" do
     field :appendable, :boolean, default: false
+    field :comments, :boolean, default: false
     field :desc, :string
     field :options, {:array, :string}
     field :title, :string

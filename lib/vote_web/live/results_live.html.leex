@@ -109,14 +109,14 @@
               <% end %>
             </td>
             <td>
-              <ul>
+              <ol class="results-list">
               <%= for {i, opt, score} <- data do %>
-                <li>
-                <%= if score do %>
-                  <b>[<%= score %>]</b> <%= opt %>
-                <% else %>
-                  <%= opt %>
-                <% end %>
+                <li
+                  <%= if score do %>
+                    value="<%= score %>"
+                  <% end %>
+                  >
+                <%= opt %>
                 <% comment = String.trim(Map.get(response.comments || %{}, "#{i}", "")) %>
                 <%= if comment != "" do %>
                   <blockquote style="border-left: 3px solid lightblue;">
@@ -125,7 +125,7 @@
                 <% end %>
                 </li>
               <% end %>
-              </ul>
+              </ol>
             </td>
           </tr>
         <% end %>

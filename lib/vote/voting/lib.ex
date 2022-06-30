@@ -34,7 +34,7 @@ defmodule Vote.Voting do
     }
   end
 
-  def input(method, form, field, options, opts) do
+  def input(method, form, field, item, opts) do
     fns = %{
       "plurality"   => {&SelectOneInput.select_one_input/4, []},
       "approval"    => {&ApprovalInput.approval_input/4, []},
@@ -46,7 +46,7 @@ defmodule Vote.Voting do
       "condorcet"   => {&RankingInput.ranking_input/4, []},
     }
     {input, base_opts} = fns[method]
-    input.(form, field, options, base_opts ++ opts)
+    input.(form, field, item, base_opts ++ opts)
   end
 
   def tally(method, votes, options) do

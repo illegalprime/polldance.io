@@ -168,6 +168,16 @@ ol.input_container {
     margin-bottom: 2rem;
 }
 
+ol.results-list {
+    margin-bottom: 0;
+    li::marker {
+        font-weight: bold;
+    }
+    :last-child {
+        margin-bottom: 0;
+    }
+}
+
 .container {
     ol {
         list-style: decimal outside;

@@ -2,14 +2,14 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
-  def rating_input(form, field, options, params \\ []) do
+  def rating_input(form, field, item, params \\ []) do
     table_opts = [
       class: "rank-table",
     ]
     content_tag(:table, table_opts) do
       [
         table_header(),
-        table_body(form, field, options, params),
+        table_body(form, field, item, params),
       ]
     end
   end
@@ -25,30 +25,37 @@ defmodule VoteWeb.Views.InputHelpers.RatingInput do
     end
   end
 
-  defp table_body(form, field, options, params) do
-    options
+  defp table_body(form, field, item, params) do
+    item.options
     |> Enum.with_index()
-    |> Enum.map(fn {o, i} -> table_row(form, field, o, i, params) end)
+    |> Enum.map(fn {o, i} -> table_row(form, field, o, i, item, params) end)
   end
 
-  defp table_row(form, field, opt, opt_idx, params) do
+  defp table_row(form, field, opt, opt_idx, item, params) do
     id = Form.input_id(form, :comments)
     name = Form.input_name(form, :comments)
     values = Form.input_value(form, :comments) || %{}
 
-    content_tag(:tr) do
-      [
-        content_tag(:td, class: "opt-name") do
+    option_label = if item.comments do
+      comment_input_attrs = [
+        name: "#{name}[#{opt_idx}]",
+        id: "#{id}_#{opt_idx}",
+        value: Map.get(values, Integer.to_string(opt_idx), ""),
+        placeholder: "Leave some comments here!",
+      ]
+      content_tag(:td, class: "opt-name") do
         [
           content_tag(:p, opt),
-          Form.textarea(form, :na, [
-            name: "#{name}[#{opt_idx}]",
-            id: "#{id}_#{opt_idx}",
-            value: Map.get(values, Integer.to_string(opt_idx), ""),
-            placeholder: "Leave some comments here!",
-          ])
+          Form.textarea(form, :na, comment_input_attrs)
         ]
-        end,
+      end
+    else
+      content_tag(:td, opt, class: "opt-name")
+    end
+
+    content_tag(:tr) do
+      [
+        option_label,
         content_tag(:td, class: "opt-rating") do
           content_tag(:div, class: "stars-container") do
             make_stars(form, field, opt_idx, params)

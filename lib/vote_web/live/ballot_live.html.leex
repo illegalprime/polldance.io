@@ -45,7 +45,7 @@
       <% end %>
       <div class="row">
         <% opts = [item_idx: idx] %>
-        <%= voting_input(item.voting_method, p, :response, item.options, opts) %>
+        <%= voting_input(item.voting_method, p, :response, item, opts) %>
       </div>
       <%= if item.appendable and !@ballot.draft do %>
         <div class="row mb0"

@@ -2,7 +2,8 @@ defmodule VoteWeb.Views.InputHelpers.ApprovalInput do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
-  def approval_input(form, field, options, _params \\ []) do
+  def approval_input(form, field, item, _params \\ []) do
+    options = item.options
     table_opts = [
       id: Form.input_id(form, field),
       class: "approval-table",
