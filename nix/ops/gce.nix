@@ -21,6 +21,11 @@ in
     deployment.keys.vote = {
       text = builtins.readFile ../../secret/env;
     };
+
+    deployment.keys.healthchecks-io = {
+      text = builtins.readFile ../../secret/healthchecks-io;
+      user = "healthchecks";
+    };
   };
 
   resources.gceImages.bootstrap = credentials // {

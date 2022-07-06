@@ -6,6 +6,10 @@
   in {
     networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
+    imports = [
+      ./healthchecks-io
+    ];
+
     # sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
     services.postgresql = {
       enable = true;
